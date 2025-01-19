@@ -1,101 +1,141 @@
-import Image from "next/image";
+'use client';
+
+import { Card, CardBody } from "@nextui-org/react";
+import { IoColorPalette, IoQrCode } from 'react-icons/io5';
+import { MdArrowOutward, MdOutlineUpcoming } from "react-icons/md";
+import Link from "next/link";
+import ThemeSwitch from "@/components/ThemeSwitch";
+import { SiJson } from 'react-icons/si';
+
+const tools = [
+  {
+    title: "JSON 工具",
+    description: "JSON 格式化、压缩、美化工具",
+    icon: <SiJson className="w-8 h-8" />,
+    decorativeIcon: <SiJson className="w-32 h-32" />,
+    href: "/tools/json",
+    gradient: "from-[#FF4B4B] to-[#A90000]",
+  },
+  {
+    title: "二维码工具",
+    description: "生成和解析二维码",
+    icon: <IoQrCode className="w-8 h-8" />,
+    decorativeIcon: <IoQrCode className="w-32 h-32" />,
+    href: "/tools/qrcode",
+    gradient: "from-[#007AFF] to-[#0055B0]",
+  },
+  {
+    title: "颜色工具",
+    description: "颜色格式转换、调色板",
+    icon: <IoColorPalette className="w-8 h-8" />,
+    decorativeIcon: <IoColorPalette className="w-32 h-32" />,
+    href: "/tools/color",
+    gradient: "from-[#17C964] to-[#0F9549]",
+  },
+  {
+    title: "敬请期待",
+    description: "更多实用工具正在开发中...",
+    icon: <MdOutlineUpcoming className="w-8 h-8" />,
+    decorativeIcon: <MdOutlineUpcoming className="w-32 h-32" />,
+    href: "#",
+    gradient: "from-[#7828C8] to-[#4C2889]",
+    disabled: true,
+  }
+];
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main className="relative w-full min-h-screen flex flex-col items-center bg-white dark:bg-black transition-colors duration-200">
+      {/* 主题切换按钮 */}
+      <div className="fixed top-6 right-6 z-50">
+        <ThemeSwitch />
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* 背景装饰 */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* 左上角装饰 */}
+        <div className="absolute -top-20 -left-20 w-96 h-96 bg-gradient-to-br from-primary/20 to-transparent dark:from-primary/5 rounded-full blur-3xl" />
+        {/* 右下角装饰 */}
+        <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-gradient-to-tl from-secondary/20 to-transparent dark:from-secondary/5 rounded-full blur-3xl" />
+        {/* 中间装饰点 */}
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-primary/30 dark:bg-primary/10 rounded-full" />
+        <div className="absolute top-1/3 right-1/3 w-3 h-3 bg-secondary/30 dark:bg-secondary/10 rounded-full" />
+        <div className="absolute bottom-1/4 left-1/3 w-2 h-2 bg-primary/30 dark:bg-primary/10 rounded-full" />
+        <div className="absolute top-2/3 right-1/4 w-2 h-2 bg-secondary/30 dark:bg-secondary/10 rounded-full" />
+      </div>
+
+      {/* 内容区域 */}
+      <div className="relative w-full max-w-7xl mx-auto px-6 py-12 flex flex-col items-center z-10">
+        {/* 标题区域 */}
+        <div className="text-center space-y-4 mb-16">
+          <h1 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary mb-6">
+            开发者工具箱
+          </h1>
+          <p className="text-xl text-default-800 dark:text-default-200">
+            快速、高效的开发辅助工具集，提供多种实用功能，助力开发工作更轻松。
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+        {/* 工具卡片网格 */}
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {tools.map((tool) => (
+            tool.disabled ? (
+              <Card 
+                key={tool.title}
+                className={`w-full h-full bg-gradient-to-br ${tool.gradient} relative overflow-hidden dark:opacity-90 cursor-not-allowed`}
+                shadow="sm"
+              >
+                <CardBody className="p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="bg-white/20 rounded-lg p-2 backdrop-blur-sm">
+                      <div className="text-white">
+                        {tool.icon}
+                      </div>
+                    </div>
+                    <div className="p-2 rounded-full bg-white/20 backdrop-blur-sm opacity-50">
+                      <MdArrowOutward className="w-4 h-4 text-white" />
+                    </div>
+                  </div>
+
+                  <div className="relative z-10">
+                    <h2 className="text-xl font-semibold text-white mb-2">{tool.title}</h2>
+                    <p className="text-white/90 dark:text-white/80">{tool.description}</p>
+                  </div>
+                </CardBody>
+              </Card>
+            ) : (
+              <Link 
+                href={tool.href} 
+                key={tool.title} 
+                className="block group"
+              >
+                <Card 
+                  className={`w-full h-full bg-gradient-to-br ${tool.gradient} relative overflow-hidden dark:opacity-90`}
+                  shadow="sm"
+                >
+                  <CardBody className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="bg-white/20 rounded-lg p-2 backdrop-blur-sm">
+                        <div className="text-white">
+                          {tool.icon}
+                        </div>
+                      </div>
+                      <div className="p-2 rounded-full bg-white/20 backdrop-blur-sm">
+                        <MdArrowOutward className="w-4 h-4 text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                      </div>
+                    </div>
+
+                    <div className="relative z-10">
+                      <h2 className="text-xl font-semibold text-white mb-2">{tool.title}</h2>
+                      <p className="text-white/90 dark:text-white/80">{tool.description}</p>
+                    </div>
+                  </CardBody>
+                </Card>
+              </Link>
+            )
+          ))}
+        </div>
+      </div>
+    </main>
   );
 }
