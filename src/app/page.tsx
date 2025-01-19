@@ -2,7 +2,8 @@
 
 import { Card, CardBody } from "@nextui-org/react";
 import { IoColorPalette, IoQrCode } from 'react-icons/io5';
-import { MdArrowOutward, MdOutlineUpcoming } from "react-icons/md";
+import { MdArrowOutward } from "react-icons/md";
+import { BsHourglassSplit } from 'react-icons/bs';
 import ThemeSwitch from "@/components/ThemeSwitch";
 import { SiJson } from 'react-icons/si';
 
@@ -12,32 +13,36 @@ const tools = [
     description: "JSON 格式化、压缩、美化工具",
     icon: <SiJson className="w-8 h-8" />,
     decorativeIcon: <SiJson className="w-32 h-32" />,
-    href: "#/tools/json",
+    path: "tools/json",
     gradient: "from-[#FF4B4B] to-[#A90000]",
+    glowColor: "group-hover:shadow-[#FF4B4B]/20",
   },
   {
     title: "二维码工具",
     description: "生成和解析二维码",
     icon: <IoQrCode className="w-8 h-8" />,
     decorativeIcon: <IoQrCode className="w-32 h-32" />,
-    href: "#/tools/qrcode",
+    path: "tools/qrcode",
     gradient: "from-[#007AFF] to-[#0055B0]",
+    glowColor: "group-hover:shadow-[#007AFF]/20",
   },
   {
     title: "颜色工具",
     description: "颜色格式转换、调色板",
     icon: <IoColorPalette className="w-8 h-8" />,
     decorativeIcon: <IoColorPalette className="w-32 h-32" />,
-    href: "#/tools/color",
+    path: "tools/color",
     gradient: "from-[#17C964] to-[#0F9549]",
+    glowColor: "group-hover:shadow-[#17C964]/20",
   },
   {
     title: "敬请期待",
     description: "更多工具正在开发中...",
-    icon: <MdOutlineUpcoming className="w-8 h-8" />,
-    decorativeIcon: <MdOutlineUpcoming className="w-32 h-32" />,
-    href: "#",
+    icon: <BsHourglassSplit className="w-8 h-8" />,
+    decorativeIcon: <BsHourglassSplit className="w-32 h-32" />,
+    path: "#",
     gradient: "from-[#7828C8] to-[#4C2889]",
+    glowColor: "group-hover:shadow-[#7828C8]/20",
     disabled: true,
   }
 ];
@@ -81,11 +86,15 @@ export default function Home() {
             tool.disabled ? (
               <Card 
                 key={tool.title}
-                className={`w-full h-full bg-gradient-to-br ${tool.gradient} relative overflow-hidden dark:opacity-90 cursor-not-allowed`}
-                shadow="sm"
+                className={`group w-full h-full bg-gradient-to-br ${tool.gradient} relative overflow-hidden dark:opacity-90 cursor-not-allowed transition-all duration-300 shadow-lg ${tool.glowColor}`}
               >
-                <CardBody className="p-6">
-                  <div className="flex justify-between items-start mb-4">
+                <CardBody className="p-6 relative">
+                  {/* 装饰性图标背景 */}
+                  <div className="absolute -top-8 -right-8 opacity-10 transform rotate-12 transition-transform duration-300 group-hover:rotate-6">
+                    {tool.decorativeIcon}
+                  </div>
+                  
+                  <div className="flex justify-between items-start mb-4 relative z-10">
                     <div className="bg-white/20 rounded-lg p-2 backdrop-blur-sm">
                       <div className="text-white">
                         {tool.icon}
@@ -103,24 +112,29 @@ export default function Home() {
                 </CardBody>
               </Card>
             ) : (
-              <a 
-                href={tool.href}
-                key={tool.title} 
+              <a
+                key={tool.title}
+                href={`#${tool.path}`}
                 className="block group"
               >
                 <Card 
-                  className={`w-full h-full bg-gradient-to-br ${tool.gradient} relative overflow-hidden dark:opacity-90`}
-                  shadow="sm"
+                  isPressable
+                  className={`w-full h-full bg-gradient-to-br ${tool.gradient} relative overflow-hidden dark:opacity-90 transition-all duration-300 hover:scale-[1.02] shadow-lg ${tool.glowColor}`}
                 >
-                  <CardBody className="p-6">
-                    <div className="flex justify-between items-start mb-4">
+                  <CardBody className="p-6 relative">
+                    {/* 装饰性图标背景 */}
+                    <div className="absolute -top-8 -right-8 opacity-10 transform rotate-12 transition-transform duration-300 group-hover:rotate-6">
+                      {tool.decorativeIcon}
+                    </div>
+                    
+                    <div className="flex justify-between items-start mb-4 relative z-10">
                       <div className="bg-white/20 rounded-lg p-2 backdrop-blur-sm">
                         <div className="text-white">
                           {tool.icon}
                         </div>
                       </div>
-                      <div className="p-2 rounded-full bg-white/20 backdrop-blur-sm">
-                        <MdArrowOutward className="w-4 h-4 text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                      <div className="p-2 rounded-full bg-white/20 backdrop-blur-sm transform transition-transform duration-300 group-hover:rotate-45">
+                        <MdArrowOutward className="w-4 h-4 text-white" />
                       </div>
                     </div>
 

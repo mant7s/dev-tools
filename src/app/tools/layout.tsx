@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { Tabs, Tab } from '@nextui-org/react';
 import { IoChevronBack } from 'react-icons/io5';
 import { IoColorPalette } from 'react-icons/io5';
@@ -12,19 +12,19 @@ const tabs = [
   {
     id: 'json',
     label: 'JSON 工具',
-    href: '#/tools/json',
+    path: 'tools/json',
     icon: <SiJson className="w-4 h-4" />,
   },
   {
     id: 'qrcode',
     label: '二维码工具',
-    href: '#/tools/qrcode',
+    path: 'tools/qrcode',
     icon: <IoQrCode className="w-4 h-4" />,
   },
   {
     id: 'color',
     label: '颜色工具',
-    href: '#/tools/color',
+    path: 'tools/color',
     icon: <IoColorPalette className="w-4 h-4" />,
   },
 ];
@@ -34,25 +34,49 @@ export default function ToolsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
+  const [currentTab, setCurrentTab] = useState<string>('');
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  const handleTabChange = (key: React.Key) => {
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.slice(1).replace(/^\//, '');
+      const tab = tabs.find(tab => tab.path === hash);
+      
+      if (tab) {
+        setCurrentTab(tab.id);
+      }
+    };
+
+    // 初始化时检查 hash
+    handleHashChange();
+    setIsInitialized(true);
+
+    // 监听 hash 变化
+    window.addEventListener('hashchange', handleHashChange);
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
+
+  // 只有在组件初始化后才处理标签页选择
+  const handleTabChange = (key: string | number) => {
+    if (!isInitialized) return;
+    
     const tab = tabs.find(tab => tab.id === key);
     if (tab) {
-      window.location.hash = tab.href;
+      window.location.hash = tab.path;
     }
   };
 
-  const currentTab = pathname.split('/').pop();
-
   return (
     <main className="min-h-screen">
-      <nav className="sticky top-0 z-40 w-full border-b bg-background/70 backdrop-blur-xl">
+      <nav className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-xl shadow-sm dark:shadow-zinc-800/30">
         <div className="max-w-7xl mx-auto">
           <div className="flex h-16 items-center justify-between px-4">
             <div className="flex items-center gap-4">
               <a
-                href="#/"
+                href="#"
                 className="inline-flex items-center text-default-500 hover:text-primary transition-colors"
               >
                 <IoChevronBack className="mr-1" />
@@ -61,25 +85,24 @@ export default function ToolsLayout({
               <Tabs
                 selectedKey={currentTab}
                 onSelectionChange={handleTabChange}
-                aria-label="工具导航"
-                color="primary"
-                variant="underlined"
                 classNames={{
                   tabList: "gap-6",
                   cursor: "w-full bg-primary",
+                  tab: "h-12 px-4",
+                  tabContent: "group-data-[selected=true]:text-primary font-medium"
                 }}
+                color="primary"
+                variant="underlined"
+                radius="full"
               >
                 {tabs.map((tab) => (
                   <Tab
                     key={tab.id}
                     title={
-                      <a
-                        href={tab.href}
-                        className="flex items-center space-x-2"
-                      >
+                      <div className="flex items-center space-x-2">
                         {tab.icon}
                         <span>{tab.label}</span>
-                      </a>
+                      </div>
                     }
                   />
                 ))}
@@ -89,7 +112,7 @@ export default function ToolsLayout({
           </div>
         </div>
       </nav>
-      <div className="container mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-6">
         {children}
       </div>
     </main>

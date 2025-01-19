@@ -1,41 +1,87 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
+import { Spinner } from '@nextui-org/react';
+import ToolsLayout from '@/app/tools/layout';
+
+// 定义工具路径类型
+type ToolPath = 'tools/json' | 'tools/qrcode' | 'tools/color';
+
+// 动态导入工具组件
+const tools: Record<ToolPath, { component: React.ComponentType }> = {
+  'tools/json': {
+    component: dynamic(() => import('@/components/JsonTool'), {
+      loading: () => <Spinner />,
+      ssr: false,
+    }),
+  },
+  'tools/qrcode': {
+    component: dynamic(() => import('@/components/QRCodeTool'), {
+      loading: () => <Spinner />,
+      ssr: false,
+    }),
+  },
+  'tools/color': {
+    component: dynamic(() => import('@/components/ColorTool'), {
+      loading: () => <Spinner />,
+      ssr: false,
+    }),
+  },
+};
 
 export default function HashRouter({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
+  const [currentPath, setCurrentPath] = useState<string | null>(null);
 
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash.slice(1);
-      if (hash) {
-        router.push(hash);
-      } else if (pathname !== '/') {
-        router.push('/');
+      const rawHash = window.location.hash;
+      const hash = rawHash.slice(1).replace(/^\//, '');
+
+      // 如果 hash 为空，设置为根路径
+      if (!hash) {
+        setCurrentPath('/');
+        return;
+      }
+
+      // 检查是否是工具路径
+      if (hash in tools) {
+        setCurrentPath(hash);
+      } else {
+        setCurrentPath(hash);
       }
     };
 
+    // 监听 hash 变化
     window.addEventListener('hashchange', handleHashChange);
-    setMounted(true);
-
+    
     // 初始化时检查 hash
-    if (window.location.hash) {
-      const hash = window.location.hash.slice(1);
-      router.push(hash);
-    }
+    handleHashChange();
 
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
     };
-  }, [router, pathname]);
+  }, []);
 
-  // 在客户端渲染之前不显示任何内容
-  if (!mounted) {
-    return null;
+  // 在初始化之前显示加载状态
+  if (currentPath === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
   }
 
+  // 如果当前 hash 对应一个工具组件，则渲染该组件
+  if (currentPath in tools) {
+    const Component = tools[currentPath as ToolPath].component;
+    return (
+      <ToolsLayout>
+        <Component />
+      </ToolsLayout>
+    );
+  }
+
+  // 否则渲染默认内容（首页）
   return <>{children}</>;
 }
