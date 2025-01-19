@@ -3,7 +3,6 @@
 import { Card, CardBody } from "@nextui-org/react";
 import { IoColorPalette, IoQrCode } from 'react-icons/io5';
 import { MdArrowOutward, MdOutlineUpcoming } from "react-icons/md";
-import Link from "next/link";
 import ThemeSwitch from "@/components/ThemeSwitch";
 import { SiJson } from 'react-icons/si';
 
@@ -13,7 +12,7 @@ const tools = [
     description: "JSON 格式化、压缩、美化工具",
     icon: <SiJson className="w-8 h-8" />,
     decorativeIcon: <SiJson className="w-32 h-32" />,
-    href: "/tools/json",
+    href: "#/tools/json",
     gradient: "from-[#FF4B4B] to-[#A90000]",
   },
   {
@@ -21,7 +20,7 @@ const tools = [
     description: "生成和解析二维码",
     icon: <IoQrCode className="w-8 h-8" />,
     decorativeIcon: <IoQrCode className="w-32 h-32" />,
-    href: "/tools/qrcode",
+    href: "#/tools/qrcode",
     gradient: "from-[#007AFF] to-[#0055B0]",
   },
   {
@@ -29,12 +28,12 @@ const tools = [
     description: "颜色格式转换、调色板",
     icon: <IoColorPalette className="w-8 h-8" />,
     decorativeIcon: <IoColorPalette className="w-32 h-32" />,
-    href: "/tools/color",
+    href: "#/tools/color",
     gradient: "from-[#17C964] to-[#0F9549]",
   },
   {
     title: "敬请期待",
-    description: "更多实用工具正在开发中...",
+    description: "更多工具正在开发中...",
     icon: <MdOutlineUpcoming className="w-8 h-8" />,
     decorativeIcon: <MdOutlineUpcoming className="w-32 h-32" />,
     href: "#",
@@ -104,8 +103,8 @@ export default function Home() {
                 </CardBody>
               </Card>
             ) : (
-              <Link 
-                href={tool.href} 
+              <a 
+                href={tool.href}
                 key={tool.title} 
                 className="block group"
               >
@@ -131,7 +130,7 @@ export default function Home() {
                     </div>
                   </CardBody>
                 </Card>
-              </Link>
+              </a>
             )
           ))}
         </div>

@@ -1,11 +1,12 @@
-import type { Metadata } from 'next';
-import ClientJsonTool from '@/components/ClientJsonTool';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'JSON 格式化 | Dev Tools',
-  description: 'JSON 格式化和压缩工具',
-};
+import dynamic from 'next/dynamic';
+import { Spinner } from '@nextui-org/react';
 
-export default function JsonPage() {
-  return <ClientJsonTool />;
+const JsonTool = dynamic(() => import('@/components/JsonTool'), {
+  loading: () => <Spinner />,
+});
+
+export default function JsonToolPage() {
+  return <JsonTool />;
 }

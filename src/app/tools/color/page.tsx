@@ -1,7 +1,12 @@
 'use client';
 
-import ColorTool from "@/components/ColorTool";
+import dynamic from 'next/dynamic';
+import { Spinner } from '@nextui-org/react';
 
-export default function ColorPage() {
+const ColorTool = dynamic(() => import('@/components/ColorTool'), {
+  loading: () => <Spinner />,
+});
+
+export default function ColorToolPage() {
   return <ColorTool />;
 }

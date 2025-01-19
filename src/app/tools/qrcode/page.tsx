@@ -1,11 +1,12 @@
-import type { Metadata } from 'next';
-import ClientQRCodeTool from '@/components/ClientQRCodeTool';
+'use client';
 
-export const metadata: Metadata = {
-  title: '二维码生成 | Dev Tools',
-  description: '在线二维码生成工具',
-};
+import dynamic from 'next/dynamic';
+import { Spinner } from '@nextui-org/react';
 
-export default function QRCodePage() {
-  return <ClientQRCodeTool />;
+const QRCodeTool = dynamic(() => import('@/components/QRCodeTool'), {
+  loading: () => <Spinner />,
+});
+
+export default function QRCodeToolPage() {
+  return <QRCodeTool />;
 }

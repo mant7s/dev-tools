@@ -4,6 +4,7 @@ import { Providers } from "./providers";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import clsx from 'clsx';
+import HashRouter from "@/components/HashRouter";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,7 +36,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Providers>
-            {children}
+            <HashRouter>
+              {children}
+            </HashRouter>
           </Providers>
         </ThemeProvider>
       </body>
