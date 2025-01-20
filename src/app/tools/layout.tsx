@@ -39,49 +39,50 @@ export default function ToolsLayout({
 
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash.slice(1).replace(/^\//, '');
-      const tab = tabs.find(tab => tab.path === hash);
+      const tab = tabs.find((t) => window.location.hash.includes(t.path));
       
       if (tab) {
         setCurrentTab(tab.id);
       }
     };
 
-    // 初始化时检查 hash
+    window.addEventListener('hashchange', handleHashChange);
     handleHashChange();
     setIsInitialized(true);
-
-    // 监听 hash 变化
-    window.addEventListener('hashchange', handleHashChange);
 
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
 
-  // 只有在组件初始化后才处理标签页选择
-  const handleTabChange = (key: string | number) => {
-    if (!isInitialized) return;
-    
-    const tab = tabs.find(tab => tab.id === key);
-    if (tab) {
-      window.location.hash = tab.path;
+  const handleTabChange = (value: string | number | null) => {
+    if (typeof value === 'string') {
+      const tab = tabs.find((t) => t.id === value);
+      if (tab) {
+        window.location.hash = `/${tab.path}`;
+      }
     }
   };
 
+  if (!isInitialized) {
+    return null;
+  }
+
   return (
-    <main className="min-h-screen">
-      <nav className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-xl shadow-sm dark:shadow-zinc-800/30">
-        <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-background flex flex-col transition-colors duration-200">
+      {/* 顶部导航栏 */}
+      <header className="w-full border-b border-divider bg-background/70 backdrop-blur-md backdrop-saturate-150 z-40 fixed top-0">
+        <nav className="max-w-7xl mx-auto">
           <div className="flex h-16 items-center justify-between px-4">
             <div className="flex items-center gap-4">
               <a
-                href="#"
+                href="#/"
                 className="inline-flex items-center text-default-500 hover:text-primary transition-colors"
               >
                 <IoChevronBack className="mr-1" />
                 返回首页
               </a>
+              <div className="h-4 w-px bg-default-200 dark:bg-default-100" />
               <Tabs
                 selectedKey={currentTab}
                 onSelectionChange={handleTabChange}
@@ -110,11 +111,15 @@ export default function ToolsLayout({
             </div>
             <ThemeSwitch />
           </div>
+        </nav>
+      </header>
+
+      {/* 内容区域 */}
+      <main className="flex-1 pt-16">
+        <div className="max-w-7xl mx-auto p-4">
+          {children}
         </div>
-      </nav>
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        {children}
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }

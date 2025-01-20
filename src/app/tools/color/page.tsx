@@ -8,5 +8,9 @@ const ColorTool = dynamic(() => import('@/components/ColorTool'), {
 });
 
 export default function ColorToolPage() {
-  return <ColorTool />;
+  return (
+    <div className="w-full h-full">
+      <ColorTool />
+    </div>
+  );
 }

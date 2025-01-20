@@ -56,7 +56,7 @@ export default function Home() {
       </div>
 
       {/* 背景装饰 */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none">
         {/* 左上角装饰 */}
         <div className="absolute -top-20 -left-20 w-96 h-96 bg-gradient-to-br from-primary/20 to-transparent dark:from-primary/5 rounded-full blur-3xl" />
         {/* 右下角装饰 */}
@@ -75,22 +75,22 @@ export default function Home() {
           <h1 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary mb-6">
             开发者工具箱
           </h1>
-          <p className="text-xl text-default-800 dark:text-default-200">
-            快速、高效的开发辅助工具集，提供多种实用功能，助力开发工作更轻松。
+          <p className="text-xl text-default-500">
+            快速、高效的开发辅助工具集
           </p>
         </div>
 
         {/* 工具卡片网格 */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-hidden">
           {tools.map((tool) => (
             tool.disabled ? (
-              <Card 
+              <div 
                 key={tool.title}
-                className={`group w-full h-full bg-gradient-to-br ${tool.gradient} relative overflow-hidden dark:opacity-90 cursor-not-allowed transition-all duration-300 shadow-lg ${tool.glowColor}`}
+                className={`group w-full h-full bg-gradient-to-br ${tool.gradient} relative dark:opacity-90 cursor-not-allowed transition-all duration-300 shadow-lg rounded-xl ${tool.glowColor} overflow-hidden`}
               >
-                <CardBody className="p-6 relative">
+                <div className="p-6 relative overflow-hidden">
                   {/* 装饰性图标背景 */}
-                  <div className="absolute -top-8 -right-8 opacity-10 transform rotate-12 transition-transform duration-300 group-hover:rotate-6">
+                  <div className="absolute -top-8 -right-8 opacity-10 transform rotate-12 transition-transform duration-300 group-hover:rotate-6 overflow-hidden">
                     {tool.decorativeIcon}
                   </div>
                   
@@ -109,21 +109,20 @@ export default function Home() {
                     <h2 className="text-xl font-semibold text-white mb-2">{tool.title}</h2>
                     <p className="text-white/90 dark:text-white/80">{tool.description}</p>
                   </div>
-                </CardBody>
-              </Card>
+                </div>
+              </div>
             ) : (
               <a
                 key={tool.title}
-                href={`#${tool.path}`}
+                href={`#/${tool.path}`}
                 className="block group"
               >
-                <Card 
-                  isPressable
-                  className={`w-full h-full bg-gradient-to-br ${tool.gradient} relative overflow-hidden dark:opacity-90 transition-all duration-300 hover:scale-[1.02] shadow-lg ${tool.glowColor}`}
+                <div 
+                  className={`w-full h-full bg-gradient-to-br ${tool.gradient} relative dark:opacity-90 transition-all duration-300 hover:scale-[1.02] shadow-lg rounded-xl ${tool.glowColor} overflow-hidden`}
                 >
-                  <CardBody className="p-6 relative">
+                  <div className="p-6 relative overflow-hidden">
                     {/* 装饰性图标背景 */}
-                    <div className="absolute -top-8 -right-8 opacity-10 transform rotate-12 transition-transform duration-300 group-hover:rotate-6">
+                    <div className="absolute -top-8 -right-8 opacity-10 transform rotate-12 transition-transform duration-300 group-hover:rotate-6 overflow-hidden">
                       {tool.decorativeIcon}
                     </div>
                     
@@ -142,8 +141,8 @@ export default function Home() {
                       <h2 className="text-xl font-semibold text-white mb-2">{tool.title}</h2>
                       <p className="text-white/90 dark:text-white/80">{tool.description}</p>
                     </div>
-                  </CardBody>
-                </Card>
+                  </div>
+                </div>
               </a>
             )
           ))}

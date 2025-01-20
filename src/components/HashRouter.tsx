@@ -36,7 +36,8 @@ export default function HashRouter({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     const handleHashChange = () => {
       const rawHash = window.location.hash;
-      const hash = rawHash.slice(1).replace(/^\//, '');
+      // 移除开头的 #/ 或 #
+      const hash = rawHash.replace(/^#\/?/, '');
 
       // 如果 hash 为空，设置为根路径
       if (!hash) {

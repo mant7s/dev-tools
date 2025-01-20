@@ -152,9 +152,9 @@ export default function ColorTool() {
   ];
 
   return (
-    <Card className="bg-content1 shadow-md h-[calc(100vh-280px)] min-h-[500px]">
+    <Card className="bg-content1 shadow-md">
       <CardBody className="p-6">
-        <div className="flex flex-col gap-6 h-full">
+        <div className="flex flex-col gap-6">
           {/* 工具栏 */}
           <div className="flex justify-between items-center">
             <ButtonGroup size="sm" variant="flat">
@@ -506,6 +506,7 @@ export default function ColorTool() {
                 value={hexInput}
                 onChange={(e) => {
                   const hex = e.target.value;
+                  setHexInput(hex);
                   const rgb = hexToRgb(hex);
                   if (!rgb) return;
 
@@ -519,7 +520,10 @@ export default function ColorTool() {
                     cmyk
                   });
                 }}
-                onFocus={(e) => e.target.select()}
+                onBlur={() => {
+                  setHexInput(color.hex);
+                }}
+                onClick={(e) => e.stopPropagation()}
                 spellCheck={false}
                 placeholder="#000000"
               />
@@ -557,25 +561,33 @@ export default function ColorTool() {
                   value={rgbInput.r}
                   onChange={(e) => {
                     const newValue = Math.max(0, Math.min(255, parseInt(e.target.value) || 0));
-                    const newRgbInput = { ...rgbInput, r: newValue.toString() };
+                    const newRgbInput = { ...rgbInput, r: e.target.value };
                     setRgbInput(newRgbInput);
 
-                    const rgb = {
-                      r: parseInt(newRgbInput.r) || 0,
-                      g: parseInt(newRgbInput.g) || 0,
-                      b: parseInt(newRgbInput.b) || 0
-                    };
+                    if (!isNaN(newValue)) {
+                      const rgb = {
+                        r: newValue,
+                        g: parseInt(rgbInput.g) || 0,
+                        b: parseInt(rgbInput.b) || 0
+                      };
 
-                    const hex = '#' + Object.values(rgb)
-                      .map(x => x.toString(16).padStart(2, '0'))
-                      .join('');
-                    
-                    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-                    const cmyk = rgbToCmyk(rgb.r, rgb.g, rgb.b);
+                      const hex = '#' + Object.values(rgb)
+                        .map(x => x.toString(16).padStart(2, '0'))
+                        .join('');
+                      
+                      const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+                      const cmyk = rgbToCmyk(rgb.r, rgb.g, rgb.b);
 
-                    updateColor({ hex, rgb, hsl, cmyk });
+                      updateColor({ hex, rgb, hsl, cmyk });
+                    }
                   }}
-                  onFocus={(e) => e.target.select()}
+                  onBlur={() => {
+                    setRgbInput(prev => ({
+                      ...prev,
+                      r: color.rgb.r.toString()
+                    }));
+                  }}
+                  onClick={(e) => e.stopPropagation()}
                   spellCheck={false}
                 />
                 <input
@@ -584,25 +596,33 @@ export default function ColorTool() {
                   value={rgbInput.g}
                   onChange={(e) => {
                     const newValue = Math.max(0, Math.min(255, parseInt(e.target.value) || 0));
-                    const newRgbInput = { ...rgbInput, g: newValue.toString() };
+                    const newRgbInput = { ...rgbInput, g: e.target.value };
                     setRgbInput(newRgbInput);
 
-                    const rgb = {
-                      r: parseInt(newRgbInput.r) || 0,
-                      g: parseInt(newRgbInput.g) || 0,
-                      b: parseInt(newRgbInput.b) || 0
-                    };
+                    if (!isNaN(newValue)) {
+                      const rgb = {
+                        r: parseInt(rgbInput.r) || 0,
+                        g: newValue,
+                        b: parseInt(rgbInput.b) || 0
+                      };
 
-                    const hex = '#' + Object.values(rgb)
-                      .map(x => x.toString(16).padStart(2, '0'))
-                      .join('');
-                    
-                    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-                    const cmyk = rgbToCmyk(rgb.r, rgb.g, rgb.b);
+                      const hex = '#' + Object.values(rgb)
+                        .map(x => x.toString(16).padStart(2, '0'))
+                        .join('');
+                      
+                      const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+                      const cmyk = rgbToCmyk(rgb.r, rgb.g, rgb.b);
 
-                    updateColor({ hex, rgb, hsl, cmyk });
+                      updateColor({ hex, rgb, hsl, cmyk });
+                    }
                   }}
-                  onFocus={(e) => e.target.select()}
+                  onBlur={() => {
+                    setRgbInput(prev => ({
+                      ...prev,
+                      g: color.rgb.g.toString()
+                    }));
+                  }}
+                  onClick={(e) => e.stopPropagation()}
                   spellCheck={false}
                 />
                 <input
@@ -611,25 +631,33 @@ export default function ColorTool() {
                   value={rgbInput.b}
                   onChange={(e) => {
                     const newValue = Math.max(0, Math.min(255, parseInt(e.target.value) || 0));
-                    const newRgbInput = { ...rgbInput, b: newValue.toString() };
+                    const newRgbInput = { ...rgbInput, b: e.target.value };
                     setRgbInput(newRgbInput);
 
-                    const rgb = {
-                      r: parseInt(newRgbInput.r) || 0,
-                      g: parseInt(newRgbInput.g) || 0,
-                      b: parseInt(newRgbInput.b) || 0
-                    };
+                    if (!isNaN(newValue)) {
+                      const rgb = {
+                        r: parseInt(rgbInput.r) || 0,
+                        g: parseInt(rgbInput.g) || 0,
+                        b: newValue
+                      };
 
-                    const hex = '#' + Object.values(rgb)
-                      .map(x => x.toString(16).padStart(2, '0'))
-                      .join('');
-                    
-                    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-                    const cmyk = rgbToCmyk(rgb.r, rgb.g, rgb.b);
+                      const hex = '#' + Object.values(rgb)
+                        .map(x => x.toString(16).padStart(2, '0'))
+                        .join('');
+                      
+                      const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+                      const cmyk = rgbToCmyk(rgb.r, rgb.g, rgb.b);
 
-                    updateColor({ hex, rgb, hsl, cmyk });
+                      updateColor({ hex, rgb, hsl, cmyk });
+                    }
                   }}
-                  onFocus={(e) => e.target.select()}
+                  onBlur={() => {
+                    setRgbInput(prev => ({
+                      ...prev,
+                      b: color.rgb.b.toString()
+                    }));
+                  }}
+                  onClick={(e) => e.stopPropagation()}
                   spellCheck={false}
                 />
               </div>
