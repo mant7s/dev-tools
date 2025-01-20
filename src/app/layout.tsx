@@ -5,6 +5,7 @@ import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import clsx from 'clsx';
 import HashRouter from "@/components/HashRouter";
+import { Analytics } from "@vercel/analytics/react"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,6 +42,7 @@ export default function RootLayout({
             </HashRouter>
           </Providers>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
