@@ -1,6 +1,5 @@
 'use client';
 
-import { Card, CardBody } from "@nextui-org/react";
 import { IoColorPalette, IoQrCode } from 'react-icons/io5';
 import { MdArrowOutward } from "react-icons/md";
 import { BsHourglassSplit } from 'react-icons/bs';
