@@ -6,7 +6,7 @@ import { Spinner } from '@nextui-org/react';
 import ToolsLayout from '@/app/tools/layout';
 
 // 定义工具路径类型
-type ToolPath = 'tools/json' | 'tools/qrcode' | 'tools/color';
+type ToolPath = 'tools/json' | 'tools/qrcode' | 'tools/color' | 'tools/timestamp';
 
 // 动态导入工具组件
 const tools: Record<ToolPath, { component: React.ComponentType }> = {
@@ -28,6 +28,12 @@ const tools: Record<ToolPath, { component: React.ComponentType }> = {
       ssr: false,
     }),
   },
+  'tools/timestamp': {
+    component: dynamic(() => import('@/components/TimestampTool'), {
+      loading: () => <Spinner />,
+      ssr: false,
+    }),
+  },
 };
 
 export default function HashRouter({ children }: { children: React.ReactNode }) {
@@ -37,20 +43,15 @@ export default function HashRouter({ children }: { children: React.ReactNode }) 
     const handleHashChange = () => {
       const rawHash = window.location.hash;
       // 移除开头的 #/ 或 #
-      const hash = rawHash.replace(/^#\/?/, '');
+      const path = rawHash.replace(/^#\/?/, '');
 
       // 如果 hash 为空，设置为根路径
-      if (!hash) {
+      if (!path) {
         setCurrentPath('/');
         return;
       }
 
-      // 检查是否是工具路径
-      if (hash in tools) {
-        setCurrentPath(hash);
-      } else {
-        setCurrentPath(hash);
-      }
+      setCurrentPath(path);
     };
 
     // 监听 hash 变化

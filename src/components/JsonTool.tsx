@@ -201,192 +201,169 @@ export default function JsonTool() {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto space-y-4">
-      {/* 操作栏 */}
-      <Card className="bg-content1">
-        <CardBody>
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex-1 min-w-[200px]">
-              <Tabs
-                selectedKey={activeTab}
-                onSelectionChange={handleTabChange}
-                variant="solid"
-                color="primary"
-                radius="full"
-                classNames={{
-                  base: "w-full",
-                  tabList: "bg-default-100 p-0.5",
-                  cursor: "bg-primary",
-                  tab: "px-4 py-2",
-                }}
-              >
-                <Tab
-                  key="format"
-                  title={
-                    <div className="flex items-center gap-2">
-                      <FaExpand className="h-4 w-4" />
-                      <span>格式化</span>
-                    </div>
-                  }
-                />
-                <Tab
-                  key="compress"
-                  title={
-                    <div className="flex items-center gap-2">
-                      <FaCompress className="h-4 w-4" />
-                      <span>压缩</span>
-                    </div>
-                  }
-                />
-              </Tabs>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <ButtonGroup variant="flat">
-                <Tooltip content="撤销">
-                  <Button
-                    isIconOnly
-                    isDisabled={historyIndex <= 0}
-                    onClick={handleUndo}
-                  >
-                    <FaUndo className="h-4 w-4" />
-                  </Button>
-                </Tooltip>
-                <Tooltip content="重做">
-                  <Button
-                    isIconOnly
-                    isDisabled={historyIndex >= history.length - 1}
-                    onClick={handleRedo}
-                  >
-                    <FaRedo className="h-4 w-4" />
-                  </Button>
-                </Tooltip>
-              </ButtonGroup>
-
-              <ButtonGroup variant="flat">
-                <Tooltip content="上传文件">
-                  <Button
-                    isIconOnly
-                    as="label"
-                    className="cursor-pointer"
-                  >
-                    <input
-                      type="file"
-                      accept=".json"
-                      onChange={handleFileUpload}
-                      className="hidden"
-                    />
-                    <MdUpload className="h-4 w-4" />
-                  </Button>
-                </Tooltip>
-                <Tooltip content="下载">
-                  <Button
-                    isIconOnly
-                    isDisabled={!jsonOutput}
-                    onClick={handleDownload}
-                  >
-                    <MdDownload className="h-4 w-4" />
-                  </Button>
-                </Tooltip>
-              </ButtonGroup>
-            </div>
+    <Card className="bg-content1 shadow-md">
+      <CardBody className="p-6">
+        <div className="flex flex-col gap-4">
+          {/* 工具栏 */}
+          <div className="flex items-center justify-between">
+            <Tabs 
+              selectedKey={activeTab}
+              onSelectionChange={(key) => setActiveTab(key as 'format' | 'compress')}
+              variant="light"
+              color="primary"
+              classNames={{
+                base: "w-full p-0",
+                tabList: "gap-6 relative rounded-none p-0",
+                cursor: "w-full bg-primary/20 dark:bg-primary/20",
+                tab: "max-w-fit px-4 h-12",
+                tabContent: "group-data-[selected=true]:text-primary font-medium"
+              }}
+            >
+              <Tab
+                key="format"
+                title={
+                  <div className="flex items-center gap-2">
+                    <FaExpand className="h-4 w-4" />
+                    <span>格式化</span>
+                  </div>
+                }
+              />
+              <Tab
+                key="compress"
+                title={
+                  <div className="flex items-center gap-2">
+                    <FaCompress className="h-4 w-4" />
+                    <span>压缩</span>
+                  </div>
+                }
+              />
+            </Tabs>
           </div>
-        </CardBody>
-      </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* 输入区域 */}
-        <Card className="bg-content1">
-          <CardBody className="p-0">
-            <div className="flex justify-between items-center p-3 border-b border-divider">
-              <h3 className="text-sm font-medium">输入 JSON</h3>
-              <Tooltip content={copyStatus['input'] ? "已复制！" : "复制"}>
+          {/* 工具栏按钮 */}
+          <div className="flex items-center gap-2">
+            <ButtonGroup size="sm" variant="flat">
+              <Tooltip content="撤销" placement="top">
                 <Button
                   isIconOnly
-                  variant="light"
-                  size="sm"
-                  isDisabled={!jsonInput}
-                  onClick={() => handleCopy(jsonInput)}
+                  isDisabled={historyIndex <= 0}
+                  onClick={handleUndo}
                 >
-                  {copyStatus['input'] ? (
-                    <FaCheck className="h-3.5 w-3.5 text-success" />
-                  ) : (
-                    <MdContentCopy className="h-3.5 w-3.5" />
-                  )}
+                  <FaUndo className="h-4 w-4" />
                 </Button>
               </Tooltip>
-            </div>
-            <Editor
-              height="400px"
-              defaultLanguage="json"
-              value={jsonInput}
-              onChange={(value) => setJsonInput(value || '')}
-              options={editorOptions}
-              beforeMount={handleBeforeMount}
-              onMount={handleEditorDidMount}
-              className="overflow-hidden rounded-b-lg"
-            />
-          </CardBody>
-        </Card>
-
-        {/* 输出区域 */}
-        <Card className="bg-content1">
-          <CardBody className="p-0">
-            <div className="flex justify-between items-center p-3 border-b border-divider">
-              <h3 className="text-sm font-medium">输出 JSON</h3>
-              <Tooltip content={copyStatus['output'] ? "已复制！" : "复制"}>
+              <Tooltip content="重做" placement="top">
                 <Button
                   isIconOnly
-                  variant="light"
-                  size="sm"
-                  isDisabled={!jsonOutput}
-                  onClick={() => handleCopy(jsonOutput)}
+                  isDisabled={historyIndex >= history.length - 1}
+                  onClick={handleRedo}
                 >
-                  {copyStatus['output'] ? (
-                    <FaCheck className="h-3.5 w-3.5 text-success" />
-                  ) : (
-                    <MdContentCopy className="h-3.5 w-3.5" />
-                  )}
+                  <FaRedo className="h-4 w-4" />
                 </Button>
               </Tooltip>
-            </div>
-            <Editor
-              height="400px"
-              defaultLanguage="json"
-              value={jsonOutput}
-              options={{ ...editorOptions, readOnly: true }}
-              beforeMount={handleBeforeMount}
-              onMount={handleEditorDidMount}
-              className="overflow-hidden rounded-b-lg"
-            />
-          </CardBody>
-        </Card>
-      </div>
+            </ButtonGroup>
+          </div>
 
-      {/* 错误提示 */}
-      {error && (
-        <Card className="bg-danger-50 border-danger">
-          <CardBody>
-            <div className="flex items-center gap-2 text-danger text-sm">
-              <IoMdWarning className="h-5 w-5 flex-shrink-0" />
-              <p>{error}</p>
-            </div>
-          </CardBody>
-        </Card>
-      )}
+          {/* 主要内容区域 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* 输入区域 */}
+            <Card className="p-4 flex-1">
+              <div className="flex flex-col gap-4 h-[600px]">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-medium">输入 JSON</h3>
+                  <Button
+                    variant="light"
+                    size="sm"
+                    startContent={copyStatus[activeTab] ? <FaCheck className="text-success" /> : <MdContentCopy />}
+                    onClick={() => {
+                      navigator.clipboard.writeText(jsonInput).then(() => {
+                        setCopyStatus(prev => ({ ...prev, [activeTab]: true }));
+                        setTimeout(() => {
+                          setCopyStatus(prev => ({ ...prev, [activeTab]: false }));
+                        }, 1500);
+                      }).catch(err => {
+                        console.error('复制失败:', err);
+                      });
+                    }}
+                  >
+                    {copyStatus[activeTab] ? '已复制' : '复制'}
+                  </Button>
+                </div>
+                <Editor
+                  height="600px"
+                  defaultLanguage="json"
+                  value={jsonInput}
+                  onChange={(value) => setJsonInput(value || '')}
+                  options={editorOptions}
+                  beforeMount={handleBeforeMount}
+                  onMount={handleEditorDidMount}
+                  className="overflow-hidden rounded-b-lg"
+                />
+              </div>
+            </Card>
 
-      {/* 转换按钮 */}
-      <div className="flex justify-center">
-        <Button
-          size="lg"
-          color="primary"
-          className="px-8"
-          isDisabled={!jsonInput}
-          onClick={handleTransform}
-        >
-          {activeTab === 'format' ? '格式化' : '压缩'}
-        </Button>
-      </div>
-    </div>
+            {/* 输出区域 */}
+            <Card className="p-4 flex-1">
+              <div className="flex flex-col gap-4 h-[600px]">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-medium">输出 JSON</h3>
+                  <Button
+                    variant="light"
+                    size="sm"
+                    startContent={copyStatus[activeTab] ? <FaCheck className="text-success" /> : <MdContentCopy />}
+                    onClick={() => {
+                      navigator.clipboard.writeText(jsonOutput).then(() => {
+                        setCopyStatus(prev => ({ ...prev, [activeTab]: true }));
+                        setTimeout(() => {
+                          setCopyStatus(prev => ({ ...prev, [activeTab]: false }));
+                        }, 1500);
+                      }).catch(err => {
+                        console.error('复制失败:', err);
+                      });
+                    }}
+                  >
+                    {copyStatus[activeTab] ? '已复制' : '复制'}
+                  </Button>
+                </div>
+                <Editor
+                  height="400px"
+                  defaultLanguage="json"
+                  value={jsonOutput}
+                  options={{ ...editorOptions, readOnly: true }}
+                  beforeMount={handleBeforeMount}
+                  onMount={handleEditorDidMount}
+                  className="overflow-hidden rounded-b-lg"
+                />
+              </div>
+            </Card>
+          </div>
+
+          {/* 错误提示 */}
+          {error && (
+            <Card className="bg-danger-50 border-danger">
+              <CardBody>
+                <div className="flex items-center gap-2 text-danger text-sm">
+                  <IoMdWarning className="h-5 w-5 flex-shrink-0" />
+                  <p>{error}</p>
+                </div>
+              </CardBody>
+            </Card>
+          )}
+
+          {/* 转换按钮 */}
+          <div className="flex justify-center">
+            <Button
+              size="lg"
+              color="primary"
+              className="px-8"
+              isDisabled={!jsonInput}
+              onClick={handleTransform}
+            >
+              {activeTab === 'format' ? '格式化' : '压缩'}
+            </Button>
+          </div>
+        </div>
+      </CardBody>
+    </Card>
   );
 }

@@ -11,9 +11,12 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: '开发者工具箱',
-  description: '快速、高效的开发辅助工具集',
+  description: '一个实用的开发者工具箱',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

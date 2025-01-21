@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useRef } from 'react';
-import { Card, CardBody, Textarea, Button, Tooltip } from '@nextui-org/react';
+import { Card, CardBody, Textarea, Button, Tooltip, Slider, Select, SelectItem } from '@nextui-org/react';
 import { FaCopy, FaDownload, FaCheck } from 'react-icons/fa';
 import { IoColorPalette } from 'react-icons/io5';
 import dynamic from 'next/dynamic';
@@ -166,70 +166,70 @@ export default function QRCodeTool() {
   );
 
   return (
-    <div className="w-full max-w-7xl mx-auto space-y-4">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* 输入区域 */}
-        <Card className="bg-content1">
-          <CardBody>
-            <div className="space-y-4">
+    <Card className="bg-content1 shadow-md">
+      <CardBody className="p-6">
+        <div className="flex flex-col gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* 左侧：生成二维码 */}
+            <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium mb-1.5">输入文本</label>
+                <h3 className="text-sm font-medium mb-2">生成二维码</h3>
                 <Textarea
+                  placeholder="请输入文本或网址..."
                   value={text}
                   onChange={(e) => setText(e.target.value)}
-                  placeholder="请输入要生成二维码的文本..."
+                  className="w-full"
                   minRows={4}
-                  classNames={{
-                    base: "w-full",
-                    input: "resize-none",
-                  }}
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-1.5">二维码大小</label>
-                <div className="flex flex-wrap gap-2">
-                  {sizeOptions.map((s) => (
-                    <Button
-                      key={s}
-                      size="sm"
-                      variant={size === s ? "solid" : "flat"}
-                      color={size === s ? "primary" : "default"}
-                      onClick={() => setSize(s)}
-                    >
-                      {s}px
-                    </Button>
-                  ))}
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">二维码大小</label>
+                  <Slider
+                    size="sm"
+                    step={50}
+                    maxValue={400}
+                    minValue={100}
+                    value={size}
+                    onChange={setSize}
+                    className="max-w-md"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium mb-2 block">容错级别</label>
+                  <Select
+                    size="sm"
+                    selectedKeys={[level]}
+                    onChange={(e) => setLevel(e.target.value as 'L' | 'M' | 'Q' | 'H')}
+                  >
+                    {levelOptions.map((level) => (
+                      <SelectItem key={level.value} value={level.value}>
+                        {level.label}
+                      </SelectItem>
+                    ))}
+                  </Select>
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-1.5">容错级别</label>
-                <div className="flex flex-wrap gap-2">
-                  {levelOptions.map((l) => (
-                    <Button
-                      key={l.value}
-                      size="sm"
-                      variant={level === l.value ? "solid" : "flat"}
-                      color={level === l.value ? "primary" : "default"}
-                      onClick={() => setLevel(l.value)}
-                    >
-                      {l.label}
-                    </Button>
-                  ))}
-                </div>
+              <div className="flex items-center gap-4">
+                <Button
+                  color="primary"
+                  isDisabled={!text}
+                  onClick={downloadQRCode}
+                  startContent={<FaDownload className="text-xl" />}
+                >
+                  下载二维码
+                </Button>
               </div>
             </div>
-          </CardBody>
-        </Card>
 
-        {/* 预览区域 */}
-        <Card className="bg-content1">
-          <CardBody>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1.5">预览</label>
-                <div className="flex items-center justify-center p-4 bg-default-100 rounded-lg">
+            {/* 右侧：预览 */}
+            <div>
+              <h3 className="text-sm font-medium mb-2">预览</h3>
+              <Card className="bg-default-50">
+                <CardBody className="flex items-center justify-center p-6">
                   {text ? (
                     <div className="relative group">
                       <div className="bg-white rounded-xl shadow-lg p-6">
@@ -255,38 +255,18 @@ export default function QRCodeTool() {
                               {copyIcon}
                             </Button>
                           </Tooltip>
-                          <Tooltip content="下载二维码" placement="top">
-                            <Button
-                              isIconOnly
-                              size="sm"
-                              variant="flat"
-                              onClick={downloadQRCode}
-                              className="bg-white/80 backdrop-blur-sm"
-                            >
-                              <FaDownload className="h-4 w-4" />
-                            </Button>
-                          </Tooltip>
                         </div>
                       </div>
                     </div>
                   ) : (
-                    <div className="text-center text-default-400">
-                      <div className="w-48 h-48 mx-auto mb-4 border-2 border-dashed border-default-200 rounded-xl flex items-center justify-center">
-                        <span className="text-xl">二维码预览</span>
-                      </div>
-                      <p className="text-small">输入文本后自动生成二维码</p>
-                    </div>
+                    <div className="text-default-400">请输入内容生成二维码</div>
                   )}
-                </div>
-              </div>
+                </CardBody>
+              </Card>
             </div>
-          </CardBody>
-        </Card>
-      </div>
+          </div>
 
-      {/* 颜色配置 */}
-      <Card className="bg-content1">
-        <CardBody>
+          {/* 颜色配置 */}
           <div className="space-y-6">
             {/* 前景色选择 */}
             <div className="space-y-3">
@@ -319,8 +299,8 @@ export default function QRCodeTool() {
               />
             </div>
           </div>
-        </CardBody>
-      </Card>
-    </div>
+        </div>
+      </CardBody>
+    </Card>
   );
 }

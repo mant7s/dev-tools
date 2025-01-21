@@ -1,49 +1,69 @@
 'use client';
 
-import { IoColorPalette, IoQrCode } from 'react-icons/io5';
+import { Card, CardBody } from "@nextui-org/react";
 import { MdArrowOutward } from "react-icons/md";
-import { BsHourglassSplit } from 'react-icons/bs';
+import { SiJson } from "react-icons/si";
+import { IoQrCode, IoColorPalette } from "react-icons/io5";
+import { BiTime } from "react-icons/bi";
+import { BsHourglassSplit } from "react-icons/bs";
 import ThemeSwitch from "@/components/ThemeSwitch";
-import { SiJson } from 'react-icons/si';
 
 const tools = [
   {
     title: "JSON 工具",
-    description: "JSON 格式化、压缩、美化工具",
-    icon: <SiJson className="w-8 h-8" />,
-    decorativeIcon: <SiJson className="w-32 h-32" />,
+    description: "格式化、压缩、转换 JSON 数据",
     path: "tools/json",
-    gradient: "from-[#FF4B4B] to-[#A90000]",
-    glowColor: "group-hover:shadow-[#FF4B4B]/20",
+    href: "#/tools/json",
+    icon: <SiJson className="w-5 h-5" />,
+    decorativeIcon: <SiJson className="w-48 h-48" />,
+    gradient: "from-[#FF1CF7] to-[#7928CA]",
+    glowColor: "hover:shadow-[#FF1CF7]/30",
+    disabled: false,
   },
   {
     title: "二维码工具",
     description: "生成和解析二维码",
-    icon: <IoQrCode className="w-8 h-8" />,
-    decorativeIcon: <IoQrCode className="w-32 h-32" />,
     path: "tools/qrcode",
-    gradient: "from-[#007AFF] to-[#0055B0]",
-    glowColor: "group-hover:shadow-[#007AFF]/20",
+    href: "#/tools/qrcode",
+    icon: <IoQrCode className="w-5 h-5" />,
+    decorativeIcon: <IoQrCode className="w-48 h-48" />,
+    gradient: "from-[#5EA2EF] to-[#0072F5]",
+    glowColor: "hover:shadow-[#0072F5]/30",
+    disabled: false,
+  },
+  {
+    title: "时间戳工具",
+    description: "时间戳转换工具",
+    path: "tools/timestamp",
+    href: "#/tools/timestamp",
+    icon: <BiTime className="w-5 h-5" />,
+    decorativeIcon: <BiTime className="w-48 h-48" />,
+    gradient: "from-[#0072F5] to-[#0055B5]",
+    glowColor: "hover:shadow-[#0072F5]/30",
+    disabled: false,
   },
   {
     title: "颜色工具",
-    description: "颜色格式转换、调色板",
-    icon: <IoColorPalette className="w-8 h-8" />,
-    decorativeIcon: <IoColorPalette className="w-32 h-32" />,
+    description: "颜色格式转换、调色板生成",
     path: "tools/color",
-    gradient: "from-[#17C964] to-[#0F9549]",
-    glowColor: "group-hover:shadow-[#17C964]/20",
+    href: "#/tools/color",
+    icon: <IoColorPalette className="w-5 h-5" />,
+    decorativeIcon: <IoColorPalette className="w-48 h-48" />,
+    gradient: "from-[#FF4D4D] to-[#F31260]",
+    glowColor: "hover:shadow-[#F31260]/30",
+    disabled: false,
   },
   {
     title: "敬请期待",
     description: "更多工具正在开发中...",
-    icon: <BsHourglassSplit className="w-8 h-8" />,
-    decorativeIcon: <BsHourglassSplit className="w-32 h-32" />,
-    path: "#",
+    path: "",
+    href: "",
+    icon: <BsHourglassSplit className="w-5 h-5" />,
+    decorativeIcon: <BsHourglassSplit className="w-48 h-48" />,
     gradient: "from-[#7828C8] to-[#4C2889]",
-    glowColor: "group-hover:shadow-[#7828C8]/20",
+    glowColor: "hover:shadow-[#7828C8]/30",
     disabled: true,
-  }
+  },
 ];
 
 export default function Home() {
@@ -80,16 +100,16 @@ export default function Home() {
         </div>
 
         {/* 工具卡片网格 */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-hidden">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {tools.map((tool) => (
             tool.disabled ? (
-              <div 
+              <Card 
                 key={tool.title}
-                className={`group w-full h-full bg-gradient-to-br ${tool.gradient} relative dark:opacity-90 cursor-not-allowed transition-all duration-300 shadow-lg rounded-xl ${tool.glowColor} overflow-hidden`}
+                className={`group w-full h-full bg-gradient-to-br ${tool.gradient} relative dark:opacity-90 cursor-not-allowed transition-all duration-300 shadow-lg ${tool.glowColor} overflow-hidden`}
               >
-                <div className="p-6 relative overflow-hidden">
+                <CardBody className="p-6 relative overflow-hidden">
                   {/* 装饰性图标背景 */}
-                  <div className="absolute -top-8 -right-8 opacity-10 transform rotate-12 transition-transform duration-300 group-hover:rotate-6 overflow-hidden">
+                  <div className="absolute -top-8 -right-8 opacity-10 transform rotate-12 transition-transform duration-300 group-hover:rotate-6">
                     {tool.decorativeIcon}
                   </div>
                   
@@ -108,20 +128,21 @@ export default function Home() {
                     <h2 className="text-xl font-semibold text-white mb-2">{tool.title}</h2>
                     <p className="text-white/90 dark:text-white/80">{tool.description}</p>
                   </div>
-                </div>
-              </div>
+                </CardBody>
+              </Card>
             ) : (
               <a
                 key={tool.title}
-                href={`#/${tool.path}`}
+                href={tool.href}
                 className="block group"
               >
-                <div 
-                  className={`w-full h-full bg-gradient-to-br ${tool.gradient} relative dark:opacity-90 transition-all duration-300 hover:scale-[1.02] shadow-lg rounded-xl ${tool.glowColor} overflow-hidden`}
+                <Card 
+                  isPressable
+                  className={`w-full h-full bg-gradient-to-br ${tool.gradient} relative dark:opacity-90 transition-all duration-300 hover:scale-[1.02] shadow-lg ${tool.glowColor} overflow-hidden`}
                 >
-                  <div className="p-6 relative overflow-hidden">
+                  <CardBody className="p-6 relative overflow-hidden">
                     {/* 装饰性图标背景 */}
-                    <div className="absolute -top-8 -right-8 opacity-10 transform rotate-12 transition-transform duration-300 group-hover:rotate-6 overflow-hidden">
+                    <div className="absolute -top-8 -right-8 opacity-10 transform rotate-12 transition-transform duration-300 group-hover:rotate-6">
                       {tool.decorativeIcon}
                     </div>
                     
@@ -140,8 +161,8 @@ export default function Home() {
                       <h2 className="text-xl font-semibold text-white mb-2">{tool.title}</h2>
                       <p className="text-white/90 dark:text-white/80">{tool.description}</p>
                     </div>
-                  </div>
-                </div>
+                  </CardBody>
+                </Card>
               </a>
             )
           ))}

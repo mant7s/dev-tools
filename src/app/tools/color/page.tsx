@@ -9,7 +9,7 @@ const ColorTool = dynamic(() => import('@/components/ColorTool'), {
 
 export default function ColorToolPage() {
   return (
-    <div className="w-full h-full">
+    <div className="flex flex-col gap-4">
       <ColorTool />
     </div>
   );
