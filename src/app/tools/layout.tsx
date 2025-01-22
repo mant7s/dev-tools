@@ -2,44 +2,45 @@
 
 import { useState, useEffect } from 'react';
 import { Tabs, Tab } from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
 import { IoChevronBack } from 'react-icons/io5';
 import { IoColorPalette } from 'react-icons/io5';
 import { SiJson } from 'react-icons/si';
 import { IoQrCode } from 'react-icons/io5';
 import { BiTime } from 'react-icons/bi';
 import ThemeSwitch from "@/components/ThemeSwitch";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 interface ToolTab {
   id: string;
   label: string;
   path: string;
-  icon: JSX.Element;
+  icon: React.ReactNode;
 }
 
 const tabs: ToolTab[] = [
   {
     id: 'json',
     label: 'JSON 工具',
-    path: 'tools/json',
+    path: '#/tools/json',
     icon: <SiJson className="w-4 h-4" />,
   },
   {
     id: 'qrcode',
     label: '二维码工具',
-    path: 'tools/qrcode',
+    path: '#/tools/qrcode',
     icon: <IoQrCode className="w-4 h-4" />,
   },
   {
     id: 'timestamp',
     label: '时间戳工具',
-    path: 'tools/timestamp',
+    path: '#/tools/timestamp',
     icon: <BiTime className="w-4 h-4" />,
   },
   {
     id: 'color',
     label: '颜色工具',
-    path: 'tools/color',
+    path: '#/tools/color',
     icon: <IoColorPalette className="w-4 h-4" />,
   },
 ];
@@ -49,55 +50,41 @@ export default function ToolsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
+  const pathname = usePathname();
   const [currentTab, setCurrentTab] = useState<string>('');
-  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     const handleHashChange = () => {
-      // 从 URL hash 中提取路径
       const hash = window.location.hash;
       const path = hash.replace(/^#\/?/, '');
-      
-      // 查找匹配的标签页
-      const tab = tabs.find(tab => path === tab.path);
-      
+      const tab = tabs.find(t => path.includes(t.id));
       if (tab) {
         setCurrentTab(tab.id);
       }
     };
 
+    // 初始化时检查 hash
+    handleHashChange();
+
     // 监听 hash 变化
     window.addEventListener('hashchange', handleHashChange);
     
-    // 初始化时检查 hash
-    handleHashChange();
-    setIsInitialized(true);
-
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
 
-  // 处理标签页切换
-  const handleTabChange = (key: string | number) => {
-    if (!isInitialized) return;
-    
-    const tab = tabs.find(tab => tab.id === key);
+  const handleTabChange = (key: React.Key) => {
+    const tab = tabs.find(t => t.id === key);
     if (tab) {
-      window.location.hash = `/${tab.path}`;
+      window.location.hash = tab.path.replace('#', '');
     }
   };
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="fixed top-0 left-0 right-0 z-50">
-        {/* 渐变背景层 */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 to-background/40 backdrop-blur-md" />
-        {/* 阴影效果 */}
-        <div className="absolute inset-0 shadow-[0_4px_16px_-3px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_16px_-3px_rgba(255,255,255,0.1)]" />
-        
-        <div className="container mx-auto px-4 relative">
+      <div className="sticky top-0 z-40 w-full backdrop-blur-lg bg-background/70 shadow-sm">
+        <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-6">
               <a
@@ -136,7 +123,7 @@ export default function ToolsLayout({
           </div>
         </div>
       </div>
-      <div className="container mx-auto px-4 pt-24">
+      <div className="container mx-auto px-4 pt-8">
         <div className="max-w-[1200px] mx-auto">
           {children}
         </div>
