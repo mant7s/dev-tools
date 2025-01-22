@@ -24,7 +24,7 @@ export default function JsonTool() {
   const editorOptions = {
     minimap: { enabled: false },
     fontSize: 14,
-    lineNumbers: 'on',
+    lineNumbers: 'off', // Changed from 'on' to 'off'
     scrollBeyondLastLine: false,
     wordWrap: 'on',
     tabSize: 2,
