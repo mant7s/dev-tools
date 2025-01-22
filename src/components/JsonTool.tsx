@@ -1,17 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardBody, Button, ButtonGroup } from "@nextui-org/react";
 import { MdContentCopy } from "react-icons/md";
 import { IoCheckmark } from "react-icons/io5";
 import dynamic from 'next/dynamic';
 import { useTheme } from 'next-themes';
+import Editor from '@monaco-editor/react';
+import { editor } from 'monaco-editor';
 
 // 动态导入 Monaco Editor 以避免 SSR 问题
-const Editor = dynamic(
-  () => import('@monaco-editor/react'),
-  { ssr: false }
-);
 
 export default function JsonTool() {
   const [input, setInput] = useState('');
@@ -21,10 +19,10 @@ export default function JsonTool() {
   const [mode, setMode] = useState<'format' | 'minify'>('format');
   const { resolvedTheme } = useTheme();
 
-  const editorOptions = {
+  const editorOptions: editor.IStandaloneEditorConstructionOptions = {
     minimap: { enabled: false },
     fontSize: 14,
-    lineNumbers: 'off', // Changed from 'on' to 'off'
+    lineNumbers: 'off' as const,
     scrollBeyondLastLine: false,
     wordWrap: 'on',
     tabSize: 2,
