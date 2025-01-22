@@ -1,11 +1,9 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Card, CardBody, Button, Tooltip, ButtonGroup } from '@nextui-org/react';
-import { IoColorPalette, IoShareOutline } from 'react-icons/io5';
+import { Card, CardBody, Button, Tooltip } from '@nextui-org/react';
 import { MdContentCopy, MdHistory } from 'react-icons/md';
 import { FaCheck, FaUndo, FaRedo } from 'react-icons/fa';
-import { HiClipboardCopy } from 'react-icons/hi';
 
 interface ColorState {
   hex: string;
@@ -63,7 +61,9 @@ export default function ColorTool() {
     b /= 255;
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
-    let h, s, l = (max + min) / 2;
+    let h;
+    let s;
+    const l = (max + min) / 2;
 
     if (max === min) {
       h = s = 0;
