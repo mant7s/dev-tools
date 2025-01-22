@@ -8,7 +8,6 @@ import { SiJson } from 'react-icons/si';
 import { IoQrCode } from 'react-icons/io5';
 import { BiTime } from 'react-icons/bi';
 import ThemeSwitch from "@/components/ThemeSwitch";
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 interface ToolTab {
