@@ -8,7 +8,7 @@ import { SiJson } from 'react-icons/si';
 import { IoQrCode } from 'react-icons/io5';
 import { BiTime } from 'react-icons/bi';
 import ThemeSwitch from "@/components/ThemeSwitch";
-import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 interface ToolTab {
   id: string;
@@ -49,7 +49,6 @@ export default function ToolsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
   const [currentTab, setCurrentTab] = useState<string>('');
 
   useEffect(() => {
@@ -86,13 +85,18 @@ export default function ToolsLayout({
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-6">
-              <a
+              <Link
                 href="/"
                 className="inline-flex items-center gap-2 text-foreground/80 hover:text-primary transition-colors whitespace-nowrap"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.hash = '';
+                  window.location.href = '/';
+                }}
               >
                 <IoChevronBack className="text-xl" />
                 <span className="font-medium">返回首页</span>
-              </a>
+              </Link>
               <div className="h-4 w-px bg-default-200/50 dark:bg-default-100/20" />
               <Tabs
                 aria-label="工具导航"

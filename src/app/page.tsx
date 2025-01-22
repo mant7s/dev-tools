@@ -12,7 +12,6 @@ const tools = [
   {
     title: "JSON 工具",
     description: "格式化、压缩、转换 JSON 数据",
-    path: "tools/json",
     href: "#/tools/json",
     icon: <SiJson className="w-5 h-5" />,
     decorativeIcon: <SiJson className="w-48 h-48" />,
@@ -23,7 +22,6 @@ const tools = [
   {
     title: "二维码工具",
     description: "生成和解析二维码",
-    path: "tools/qrcode",
     href: "#/tools/qrcode",
     icon: <IoQrCode className="w-5 h-5" />,
     decorativeIcon: <IoQrCode className="w-48 h-48" />,
@@ -34,7 +32,6 @@ const tools = [
   {
     title: "时间戳工具",
     description: "时间戳转换工具",
-    path: "tools/timestamp",
     href: "#/tools/timestamp",
     icon: <BiTime className="w-5 h-5" />,
     decorativeIcon: <BiTime className="w-48 h-48" />,
@@ -45,7 +42,6 @@ const tools = [
   {
     title: "颜色工具",
     description: "颜色格式转换、调色板生成",
-    path: "tools/color",
     href: "#/tools/color",
     icon: <IoColorPalette className="w-5 h-5" />,
     decorativeIcon: <IoColorPalette className="w-48 h-48" />,
@@ -56,7 +52,6 @@ const tools = [
   {
     title: "敬请期待",
     description: "更多工具正在开发中...",
-    path: "",
     href: "",
     icon: <BsHourglassSplit className="w-5 h-5" />,
     decorativeIcon: <BsHourglassSplit className="w-48 h-48" />,
@@ -100,71 +95,42 @@ export default function Home() {
         </div>
 
         {/* 工具卡片网格 */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
           {tools.map((tool) => (
-            tool.disabled ? (
-              <Card 
-                key={tool.title}
-                className={`group w-full h-full bg-gradient-to-br ${tool.gradient} relative dark:opacity-90 cursor-not-allowed transition-all duration-300 shadow-lg ${tool.glowColor} overflow-hidden`}
-              >
-                <CardBody className="p-6 relative overflow-hidden">
-                  {/* 装饰性图标背景 */}
-                  <div className="absolute -top-8 -right-8 opacity-10 transform rotate-12 transition-transform duration-300 group-hover:rotate-6">
-                    {tool.decorativeIcon}
-                  </div>
-                  
-                  <div className="flex justify-between items-start mb-4 relative z-10">
-                    <div className="bg-white/20 rounded-lg p-2 backdrop-blur-sm">
-                      <div className="text-white">
-                        {tool.icon}
-                      </div>
+            <Card
+              key={tool.title}
+              isPressable={!tool.disabled}
+              isHoverable={!tool.disabled}
+              className={`w-full h-full bg-gradient-to-br ${tool.gradient} relative dark:opacity-90 transition-all duration-300 ${!tool.disabled ? `hover:scale-[1.02] shadow-lg ${tool.glowColor}` : 'cursor-not-allowed'} overflow-hidden`}
+              onPress={() => {
+                if (!tool.disabled && tool.href) {
+                  window.location.href = tool.href;
+                }
+              }}
+            >
+              <CardBody className="p-6 relative overflow-hidden">
+                {/* 装饰性图标背景 */}
+                <div className="absolute -top-8 -right-8 opacity-10 transform rotate-12 transition-transform duration-300 group-hover:rotate-6">
+                  {tool.decorativeIcon}
+                </div>
+                
+                <div className="flex justify-between items-start mb-4 relative z-10">
+                  <div className="bg-white/20 rounded-lg p-2 backdrop-blur-sm">
+                    <div className="text-white">
+                      {tool.icon}
                     </div>
-                    <div className="p-2 rounded-full bg-white/20 backdrop-blur-sm opacity-50">
-                      <MdArrowOutward className="w-4 h-4 text-white" />
-                    </div>
                   </div>
+                  <div className={`p-2 rounded-full bg-white/20 backdrop-blur-sm ${!tool.disabled && 'transform transition-transform duration-300 group-hover:rotate-45'}`}>
+                    <MdArrowOutward className="w-4 h-4 text-white" />
+                  </div>
+                </div>
 
-                  <div className="relative z-10">
-                    <h2 className="text-xl font-semibold text-white mb-2">{tool.title}</h2>
-                    <p className="text-white/90 dark:text-white/80">{tool.description}</p>
-                  </div>
-                </CardBody>
-              </Card>
-            ) : (
-              <a
-                key={tool.title}
-                href={tool.href}
-                className="block group"
-              >
-                <Card 
-                  isPressable
-                  className={`w-full h-full bg-gradient-to-br ${tool.gradient} relative dark:opacity-90 transition-all duration-300 hover:scale-[1.02] shadow-lg ${tool.glowColor} overflow-hidden`}
-                >
-                  <CardBody className="p-6 relative overflow-hidden">
-                    {/* 装饰性图标背景 */}
-                    <div className="absolute -top-8 -right-8 opacity-10 transform rotate-12 transition-transform duration-300 group-hover:rotate-6">
-                      {tool.decorativeIcon}
-                    </div>
-                    
-                    <div className="flex justify-between items-start mb-4 relative z-10">
-                      <div className="bg-white/20 rounded-lg p-2 backdrop-blur-sm">
-                        <div className="text-white">
-                          {tool.icon}
-                        </div>
-                      </div>
-                      <div className="p-2 rounded-full bg-white/20 backdrop-blur-sm transform transition-transform duration-300 group-hover:rotate-45">
-                        <MdArrowOutward className="w-4 h-4 text-white" />
-                      </div>
-                    </div>
-
-                    <div className="relative z-10">
-                      <h2 className="text-xl font-semibold text-white mb-2">{tool.title}</h2>
-                      <p className="text-white/90 dark:text-white/80">{tool.description}</p>
-                    </div>
-                  </CardBody>
-                </Card>
-              </a>
-            )
+                <div className="relative z-10">
+                  <h2 className="text-xl font-semibold text-white mb-2">{tool.title}</h2>
+                  <p className="text-white/90 dark:text-white/80">{tool.description}</p>
+                </div>
+              </CardBody>
+            </Card>
           ))}
         </div>
       </div>
