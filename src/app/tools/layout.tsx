@@ -49,7 +49,7 @@ export default function ToolsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [currentTab, setCurrentTab] = useState<string>('');
+  const [currentTab, setCurrentTab] = useState<string>('json');
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -62,7 +62,14 @@ export default function ToolsLayout({
     };
 
     // 初始化时检查 hash
-    handleHashChange();
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash;
+      if (!hash || hash === '#') {
+        // 如果没有 hash，设置默认工具
+        window.location.replace('#/tools/json');
+      }
+      handleHashChange();
+    }
 
     // 监听 hash 变化
     window.addEventListener('hashchange', handleHashChange);
@@ -75,7 +82,7 @@ export default function ToolsLayout({
   const handleTabChange = (key: React.Key) => {
     const tab = tabs.find(t => t.id === key);
     if (tab) {
-      window.location.hash = tab.path.replace('#', '');
+      window.location.replace(tab.path);
     }
   };
 
@@ -90,8 +97,7 @@ export default function ToolsLayout({
                 className="inline-flex items-center gap-2 text-foreground/80 hover:text-primary transition-colors whitespace-nowrap"
                 onClick={(e) => {
                   e.preventDefault();
-                  window.location.hash = '';
-                  window.location.href = '/';
+                  window.location.replace('/');
                 }}
               >
                 <IoChevronBack className="text-xl" />

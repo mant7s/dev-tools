@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Card, CardBody, Textarea, Button, Tooltip, Slider, Select, SelectItem } from '@nextui-org/react';
-import { FaCopy, FaDownload, FaCheck } from 'react-icons/fa';
-import { IoColorPalette } from 'react-icons/io5';
+import { MdContentCopy, MdDownload } from 'react-icons/md';
+import { IoCheckmark, IoQrCodeOutline, IoColorPalette } from 'react-icons/io5';
 import dynamic from 'next/dynamic';
 
 // 动态导入 QRCode 组件以避免 SSR 问题
@@ -18,7 +18,10 @@ export default function QRCodeTool() {
   const [level, setLevel] = useState<'L' | 'M' | 'Q' | 'H'>('M');
   const [fgColor, setFgColor] = useState('#000000');
   const [bgColor, setBgColor] = useState('#FFFFFF');
-  const [copyIcon, setCopyIcon] = useState(<FaCopy className="h-4 w-4" />);
+  const [copyIcon, setCopyIcon] = useState(<MdContentCopy className="h-4 w-4" />);
+  const [qrCode, setQrCode] = useState('');
+  const [error, setError] = useState('');
+  const [copied, setCopied] = useState(false);
 
   const downloadQRCode = useCallback(() => {
     const canvas = document.querySelector('canvas');
@@ -45,9 +48,9 @@ export default function QRCodeTool() {
       await navigator.clipboard.write([
         new ClipboardItem({ 'image/png': blob })
       ]);
-      setCopyIcon(<FaCheck className="h-4 w-4" />);
+      setCopyIcon(<IoCheckmark className="h-4 w-4" />);
       setTimeout(() => {
-        setCopyIcon(<FaCopy className="h-4 w-4" />);
+        setCopyIcon(<MdContentCopy className="h-4 w-4" />);
       }, 1500);
     } catch (err) {
       console.error('复制失败:', err);
@@ -165,139 +168,187 @@ export default function QRCodeTool() {
     </div>
   );
 
+  useEffect(() => {
+    if (!text) {
+      setQrCode('');
+      return;
+    }
+
+    QRCode.toDataURL(text, {
+      width: size,
+      margin: 2,
+      color: {
+        dark: fgColor,
+        light: bgColor,
+      },
+    })
+      .then(url => {
+        setQrCode(url);
+        setError('');
+      })
+      .catch(err => {
+        console.error('生成二维码失败:', err);
+        setError('生成二维码失败');
+        setQrCode('');
+      });
+  }, [text, size, fgColor, bgColor]);
+
+  const copyQRCodeHandler = async () => {
+    try {
+      if (!qrCode) return;
+
+      const response = await fetch(qrCode);
+      const blob = await response.blob();
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          [blob.type]: blob
+        })
+      ]);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch (err) {
+      console.error('复制失败:', err);
+    }
+  };
+
+  const downloadQRCodeHandler = () => {
+    if (!qrCode) return;
+
+    const link = document.createElement('a');
+    link.download = 'qrcode.png';
+    link.href = qrCode;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <Card className="bg-content1 shadow-md">
       <CardBody className="p-6">
-        <div className="flex flex-col gap-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* 左侧：生成二维码 */}
-            <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* 左侧：生成二维码 */}
+          <div className="flex flex-col gap-6">
+            <div>
+              <h3 className="text-sm font-medium mb-2">生成二维码</h3>
+              <Textarea
+                placeholder="请输入文本或网址..."
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                className="w-full"
+                minRows={4}
+              />
+            </div>
+
+            <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-medium mb-2">生成二维码</h3>
-                <Textarea
-                  placeholder="请输入文本或网址..."
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  className="w-full"
-                  minRows={4}
+                <label className="text-sm font-medium mb-2 block">二维码大小</label>
+                <Slider
+                  size="sm"
+                  step={50}
+                  maxValue={400}
+                  minValue={100}
+                  value={size}
+                  onChange={setSize}
+                  className="max-w-md"
                 />
               </div>
 
-              <div className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium mb-2 block">二维码大小</label>
-                  <Slider
-                    size="sm"
-                    step={50}
-                    maxValue={400}
-                    minValue={100}
-                    value={size}
-                    onChange={setSize}
-                    className="max-w-md"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium mb-2 block">容错级别</label>
-                  <Select
-                    size="sm"
-                    selectedKeys={[level]}
-                    onChange={(e) => setLevel(e.target.value as 'L' | 'M' | 'Q' | 'H')}
-                  >
-                    {levelOptions.map((level) => (
-                      <SelectItem key={level.value} value={level.value}>
-                        {level.label}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <Button
-                  color="primary"
-                  isDisabled={!text}
-                  onClick={downloadQRCode}
-                  startContent={<FaDownload className="text-xl" />}
+              <div>
+                <label className="text-sm font-medium mb-2 block">容错级别</label>
+                <Select
+                  size="sm"
+                  selectedKeys={[level]}
+                  onChange={(e) => setLevel(e.target.value as 'L' | 'M' | 'Q' | 'H')}
                 >
-                  下载二维码
-                </Button>
+                  {levelOptions.map((level) => (
+                    <SelectItem key={level.value} value={level.value}>
+                      {level.label}
+                    </SelectItem>
+                  ))}
+                </Select>
               </div>
             </div>
 
-            {/* 右侧：预览 */}
-            <div>
-              <h3 className="text-sm font-medium mb-2">预览</h3>
-              <Card className="bg-default-50">
-                <CardBody className="flex items-center justify-center p-6">
-                  {text ? (
-                    <div className="relative group">
-                      <div className="bg-white rounded-xl shadow-lg p-6">
-                        <QRCodeSVG
-                          value={text}
-                          size={size}
-                          level={level}
-                          fgColor={fgColor}
-                          bgColor={bgColor}
-                          includeMargin
-                        />
-                      </div>
-                      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="flex gap-2">
-                          <Tooltip content="复制二维码" placement="top">
-                            <Button
-                              isIconOnly
-                              size="sm"
-                              variant="flat"
-                              onClick={copyQRCode}
-                              className="bg-white/80 backdrop-blur-sm"
-                            >
-                              {copyIcon}
-                            </Button>
-                          </Tooltip>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-default-400">请输入内容生成二维码</div>
-                  )}
-                </CardBody>
-              </Card>
+            <div className="flex items-center gap-4">
+              <Button
+                color="primary"
+                isDisabled={!text}
+                onClick={downloadQRCodeHandler}
+                startContent={<MdDownload className="text-xl" />}
+              >
+                下载二维码
+              </Button>
             </div>
           </div>
 
-          {/* 颜色配置 */}
-          <div className="space-y-6">
-            {/* 前景色选择 */}
-            <div className="space-y-3">
-              <label className="block text-sm font-medium">前景色</label>
-              <ColorPicker
-                color={fgColor}
-                onChange={setFgColor}
-                label="前景色"
-              />
-              <PresetColorButtons
-                colors={presetColors.foreground}
-                selectedColor={fgColor}
-                onChange={setFgColor}
-              />
+          {/* 右侧：预览 */}
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-sm font-medium">二维码预览</h3>
+              <div className="flex gap-2">
+                <Button
+                  isIconOnly
+                  variant="light"
+                  size="sm"
+                  onClick={copyQRCodeHandler}
+                  isDisabled={!qrCode}
+                >
+                  {copied ? <IoCheckmark className="text-success" /> : <MdContentCopy />}
+                </Button>
+              </div>
             </div>
+            <div className="flex items-center justify-center p-4 bg-default-100 rounded-lg min-h-[300px]">
+              {qrCode ? (
+                <img
+                  src={qrCode}
+                  alt="QR Code"
+                  className="max-w-full h-auto"
+                  style={{ width: size }}
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center text-default-400">
+                  <IoQrCodeOutline className="w-16 h-16 mb-2" />
+                  <p className="text-sm">输入内容后将生成二维码</p>
+                </div>
+              )}
+            </div>
+            {error && (
+              <div className="mt-2 text-danger text-sm">{error}</div>
+            )}
+          </div>
+        </div>
 
-            {/* 背景色选择 */}
-            <div className="space-y-3">
-              <label className="block text-sm font-medium">背景色</label>
-              <ColorPicker
-                color={bgColor}
-                onChange={setBgColor}
-                label="背景色"
-              />
-              <PresetColorButtons
-                colors={presetColors.background}
-                selectedColor={bgColor}
-                onChange={setBgColor}
-                isBackground
-              />
-            </div>
+        {/* 颜色配置 */}
+        <div className="space-y-6">
+          {/* 前景色选择 */}
+          <div className="space-y-3">
+            <label className="block text-sm font-medium">前景色</label>
+            <ColorPicker
+              color={fgColor}
+              onChange={setFgColor}
+              label="前景色"
+            />
+            <PresetColorButtons
+              colors={presetColors.foreground}
+              selectedColor={fgColor}
+              onChange={setFgColor}
+            />
+          </div>
+
+          {/* 背景色选择 */}
+          <div className="space-y-3">
+            <label className="block text-sm font-medium">背景色</label>
+            <ColorPicker
+              color={bgColor}
+              onChange={setBgColor}
+              label="背景色"
+            />
+            <PresetColorButtons
+              colors={presetColors.background}
+              selectedColor={bgColor}
+              onChange={setBgColor}
+              isBackground
+            />
           </div>
         </div>
       </CardBody>

@@ -1,35 +1,56 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-import { Card, CardBody, Button, Textarea } from "@nextui-org/react";
+import { useState } from 'react';
+import { Card, CardBody, Button, ButtonGroup } from "@nextui-org/react";
 import { MdContentCopy } from "react-icons/md";
 import { IoCheckmark } from "react-icons/io5";
+import dynamic from 'next/dynamic';
+import { useTheme } from 'next-themes';
+
+// 动态导入 Monaco Editor 以避免 SSR 问题
+const Editor = dynamic(
+  () => import('@monaco-editor/react'),
+  { ssr: false }
+);
 
 export default function JsonTool() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState('');
+  const [mode, setMode] = useState<'format' | 'minify'>('format');
+  const { resolvedTheme } = useTheme();
 
-  const formatJson = useCallback((jsonString: string) => {
+  const editorOptions = {
+    minimap: { enabled: false },
+    fontSize: 14,
+    lineNumbers: 'on',
+    scrollBeyondLastLine: false,
+    wordWrap: 'on',
+    tabSize: 2,
+    formatOnPaste: true,
+    automaticLayout: true,
+  };
+
+  const formatJson = (jsonString: string) => {
     try {
       const obj = JSON.parse(jsonString);
       return JSON.stringify(obj, null, 2);
-    } catch (err) {
+    } catch {
       return '';
     }
-  }, []);
+  };
 
-  const minifyJson = useCallback((jsonString: string) => {
+  const minifyJson = (jsonString: string) => {
     try {
       const obj = JSON.parse(jsonString);
       return JSON.stringify(obj);
-    } catch (err) {
+    } catch {
       return '';
     }
-  }, []);
+  };
 
-  const handleInputChange = useCallback((value: string) => {
+  const handleInputChange = (value: string = '') => {
     setInput(value);
     setError('');
 
@@ -39,8 +60,8 @@ export default function JsonTool() {
     }
 
     try {
-      const formatted = formatJson(value);
-      setOutput(formatted);
+      const result = mode === 'format' ? formatJson(value) : minifyJson(value);
+      setOutput(result);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -49,9 +70,10 @@ export default function JsonTool() {
       }
       setOutput('');
     }
-  }, [formatJson]);
+  };
 
-  const handleFormat = useCallback(() => {
+  const handleFormat = () => {
+    setMode('format');
     if (!input.trim()) {
       setError('请输入 JSON 数据');
       return;
@@ -68,9 +90,10 @@ export default function JsonTool() {
         setError('无效的 JSON 格式');
       }
     }
-  }, [input, formatJson]);
+  };
 
-  const handleMinify = useCallback(() => {
+  const handleMinify = () => {
+    setMode('minify');
     if (!input.trim()) {
       setError('请输入 JSON 数据');
       return;
@@ -87,9 +110,9 @@ export default function JsonTool() {
         setError('无效的 JSON 格式');
       }
     }
-  }, [input, minifyJson]);
+  };
 
-  const copyToClipboard = useCallback(async (text: string) => {
+  const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
@@ -97,46 +120,45 @@ export default function JsonTool() {
     } catch (err) {
       console.error('复制失败:', err);
     }
-  }, []);
+  };
 
   return (
     <Card className="bg-content1 shadow-md">
       <CardBody className="p-6">
-        <div className="flex flex-col gap-6">
-          {/* 输入区域 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* 左侧：输入区域 */}
           <div>
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-sm font-medium">输入</h3>
-              <div className="flex gap-2">
+              <ButtonGroup variant="flat">
                 <Button
                   size="sm"
-                  variant="light"
                   onClick={handleFormat}
+                  className={mode === 'format' ? 'bg-primary/20' : ''}
                 >
                   格式化
                 </Button>
                 <Button
                   size="sm"
-                  variant="light"
                   onClick={handleMinify}
+                  className={mode === 'minify' ? 'bg-primary/20' : ''}
                 >
                   压缩
                 </Button>
-              </div>
+              </ButtonGroup>
             </div>
-            <Textarea
-              value={input}
-              onValueChange={handleInputChange}
-              placeholder="请输入 JSON 数据..."
-              minRows={8}
-              variant="bordered"
-              classNames={{
-                input: "font-mono",
-              }}
-            />
+            <div className="h-[calc(100vh-280px)] rounded-lg overflow-hidden border-2 border-default-200 dark:border-default-100">
+              <Editor
+                defaultLanguage="json"
+                value={input}
+                onChange={handleInputChange}
+                theme={resolvedTheme === 'dark' ? 'vs-dark' : 'light'}
+                options={editorOptions}
+              />
+            </div>
           </div>
 
-          {/* 输出区域 */}
+          {/* 右侧：输出区域 */}
           <div>
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-sm font-medium">输出</h3>
@@ -150,18 +172,20 @@ export default function JsonTool() {
                 {copied ? <IoCheckmark className="text-success" /> : <MdContentCopy />}
               </Button>
             </div>
-            <Textarea
-              value={output}
-              isReadOnly
-              placeholder="JSON 输出..."
-              minRows={8}
-              variant="bordered"
-              color={error ? "danger" : "default"}
-              errorMessage={error}
-              classNames={{
-                input: "font-mono",
-              }}
-            />
+            <div className="h-[calc(100vh-280px)] rounded-lg overflow-hidden border-2 border-default-200 dark:border-default-100">
+              <Editor
+                defaultLanguage="json"
+                value={output}
+                theme={resolvedTheme === 'dark' ? 'vs-dark' : 'light'}
+                options={{
+                  ...editorOptions,
+                  readOnly: true,
+                }}
+              />
+            </div>
+            {error && (
+              <p className="mt-2 text-sm text-danger">{error}</p>
+            )}
           </div>
         </div>
       </CardBody>

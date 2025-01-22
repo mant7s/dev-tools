@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Card, CardBody, Button, Tooltip, ButtonGroup } from '@nextui-org/react';
+import { Card, CardBody, Button, Tooltip, ButtonGroup, Input } from '@nextui-org/react';
 import { IoColorPalette, IoShareOutline } from 'react-icons/io5';
 import { MdContentCopy, MdHistory } from 'react-icons/md';
 import { FaCheck, FaUndo, FaRedo } from 'react-icons/fa';
@@ -336,7 +336,7 @@ export default function ColorTool() {
                       )}
                     </Button>
                   </div>
-                  <input
+                  <Input
                     type="text"
                     className="w-full mt-1 px-2 py-1 font-mono text-sm bg-default-100 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
                     value={hexInput}
@@ -392,7 +392,7 @@ export default function ColorTool() {
                     </Button>
                   </div>
                   <div className="flex gap-2 mt-1">
-                    <input
+                    <Input
                       type="text"
                       className="w-16 px-2 py-1 font-mono text-sm bg-default-100 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
                       value={rgbInput.r}
@@ -427,7 +427,7 @@ export default function ColorTool() {
                       onClick={(e) => e.stopPropagation()}
                       spellCheck={false}
                     />
-                    <input
+                    <Input
                       type="text"
                       className="w-16 px-2 py-1 font-mono text-sm bg-default-100 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
                       value={rgbInput.g}
@@ -462,7 +462,7 @@ export default function ColorTool() {
                       onClick={(e) => e.stopPropagation()}
                       spellCheck={false}
                     />
-                    <input
+                    <Input
                       type="text"
                       className="w-16 px-2 py-1 font-mono text-sm bg-default-100 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
                       value={rgbInput.b}
@@ -574,7 +574,7 @@ export default function ColorTool() {
                     <div key={label} className="space-y-1.5">
                       <div className="flex justify-between items-center">
                         <label className="text-xs text-default-500">{label}</label>
-                        <input
+                        <Input
                           type="number"
                           className="w-12 text-xs font-medium text-right bg-transparent"
                           value={value}

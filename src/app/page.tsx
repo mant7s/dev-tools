@@ -104,7 +104,7 @@ export default function Home() {
               className={`w-full h-full bg-gradient-to-br ${tool.gradient} relative dark:opacity-90 transition-all duration-300 ${!tool.disabled ? `hover:scale-[1.02] shadow-lg ${tool.glowColor}` : 'cursor-not-allowed'} overflow-hidden`}
               onPress={() => {
                 if (!tool.disabled && tool.href) {
-                  window.location.href = tool.href;
+                  window.location.replace(tool.href);
                 }
               }}
             >
