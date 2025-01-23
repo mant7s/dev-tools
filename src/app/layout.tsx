@@ -4,6 +4,7 @@ import { Providers } from './providers';
 import { ThemeProvider } from 'next-themes';
 import HashRouter from '@/components/HashRouter';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import clsx from 'clsx';
 import './globals.css';
 
@@ -37,10 +38,11 @@ export default function RootLayout({
           <Providers>
             <HashRouter>
               {children}
+              <Analytics />
+              <SpeedInsights />
             </HashRouter>
           </Providers>
         </ThemeProvider>
-        <Analytics />
       </body>
     </html>
   );
