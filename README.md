@@ -6,117 +6,119 @@
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](http://makeapullrequest.com)
 
-一个现代化的开发工具集合，基于 Next.js 和 NextUI 构建。提供多种实用的开发工具，帮助开发者提高工作效率。
+English | [简体中文](./README.zh-CN.md)
 
-## ✨ 功能特性
+A modern collection of development tools built with Next.js and NextUI, designed to enhance developer productivity.
 
-### 🎨 颜色工具
-- 支持多种颜色格式转换（RGB、HSL、CMYK）
-- 专业的颜色选择器界面
-- 常用颜色预设功能
-- 自动保存颜色历史记录
-- 一键复制各种格式的颜色代码
+## ✨ Features
 
-### 📝 JSON 工具
-- 智能 JSON 格式化与压缩
-- 实时语法错误检测
-- 专业的代码语法高亮
-- 便捷的复制与分享功能
+### 🎨 Color Tools
+- Multiple color format conversions (RGB, HSL, CMYK)
+- Professional color picker interface
+- Preset color palettes
+- Automatic color history tracking
+- One-click color code copying
 
-### 📱 二维码工具
-- 快速文本转二维码
-- 支持自定义颜色和样式
-- 多种格式导出（PNG/SVG）
-- 实时预览效果
+### 📝 JSON Tools
+- Smart JSON formatting and compression
+- Real-time syntax error detection
+- Professional code syntax highlighting
+- Easy copy and share functionality
 
-### ⏰ 时间戳工具
-- 时间戳与日期格式互转
-- 支持毫秒/秒级时间戳
-- 多种日期格式化选项
-- 时间计算与时区转换
-- 一键复制转换结果
+### 📱 QR Code Tools
+- Quick text to QR code conversion
+- Customizable colors and styles
+- Multiple export formats (PNG/SVG)
+- Real-time preview
 
-## 🚀 技术栈
+### ⏰ Timestamp Tools
+- Convert between timestamps and date formats
+- Support for millisecond/second level timestamps
+- Multiple date formatting options
+- Time calculation and timezone conversion
+- One-click copy of conversion results
 
-- **前端框架**: [Next.js 15](https://nextjs.org/) - React 应用框架
-- **UI 组件**: [NextUI v2](https://nextui.org/) - 现代化 UI 组件库
-- **编辑器**: [Monaco Editor](https://microsoft.github.io/monaco-editor/) - VS Code 同款编辑器
-- **二维码**: [QRCode.react](https://www.npmjs.com/package/qrcode.react) - React 二维码生成器
-- **样式**: [Tailwind CSS](https://tailwindcss.com/) - 实用优先的 CSS 框架
+## 🚀 Tech Stack
 
-## 🔧 开始使用
+- **Framework**: [Next.js 15](https://nextjs.org/) - The React Framework
+- **UI Components**: [NextUI v2](https://nextui.org/) - Modern UI Component Library
+- **Editor**: [Monaco Editor](https://microsoft.github.io/monaco-editor/) - VS Code's Editor
+- **QR Code**: [QRCode.react](https://www.npmjs.com/package/qrcode.react) - React QR Code Generator
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS Framework
 
-1. **克隆项目**
+## 🔧 Getting Started
+
+1. **Clone the repository**
 
 ```bash
 git clone git@github.com:mant7s/dev-tools.git
 cd dev-tools
 ```
 
-2. **安装依赖**
+2. **Install dependencies**
 
 ```bash
-pnpm install  # 推荐
-# 或
+pnpm install  # recommended
+# or
 npm install
-# 或
+# or
 yarn install
 ```
 
-3. **启动开发服务器**
+3. **Start the development server**
 
 ```bash
-pnpm dev  # 推荐
-# 或
+pnpm dev  # recommended
+# or
 npm run dev
-# 或
+# or
 yarn dev
 ```
 
-4. 在浏览器中访问 [http://localhost:3000](http://localhost:3000)
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## 📦 构建部署
+## 📦 Build & Deploy
 
-1. **构建项目**
+1. **Build the project**
 
 ```bash
 pnpm build
-# 或
+# or
 npm run build
-# 或
+# or
 yarn build
 ```
 
-2. **启动生产服务器**
+2. **Start production server**
 
 ```bash
 pnpm start
-# 或
+# or
 npm run start
-# 或
+# or
 yarn start
 ```
 
-## ☁️ Vercel 部署
+## ☁️ Deploy on Vercel
 
-本项目支持一键部署到 Vercel 平台：
+Deploy the example using Vercel:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fmant7s%2Fdev-tools)
 
-或者手动部署：
+Or deploy it manually:
 
-1. Fork 本项目到你的 GitHub
-2. 在 [Vercel](https://vercel.com) 导入项目
-3. 等待自动部署完成
+1. Fork this repository to your GitHub account
+2. Import the project on [Vercel](https://vercel.com)
+3. Wait for automatic deployment to complete
 
-## 🤝 贡献指南
+## 🤝 Contributing
 
-欢迎提交 Pull Request 来帮助改进这个项目！在提交 PR 之前，请确保：
+We welcome Pull Requests! Before submitting a PR, please ensure:
 
-- 代码经过格式化和 lint 检查
-- 所有测试用例通过
-- 如果添加新功能，请补充相应的文档
+- Your code is formatted and linted
+- All tests pass
+- Documentation is updated for any new features
 
-## 📄 开源协议
+## 📄 License
 
-本项目采用 [MIT](LICENSE) 开源协议 - 详见 [LICENSE](LICENSE) 文件。
+This project is licensed under the [MIT License](LICENSE) - see the [LICENSE](LICENSE) file for details.
