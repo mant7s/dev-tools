@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardBody, CardHeader, Input, Button, Textarea } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Button, Textarea } from "@nextui-org/react";
 
 export default function URLTool() {
   const [input, setInput] = useState("");
@@ -15,7 +15,7 @@ export default function URLTool() {
       } else {
         setOutput(decodeURIComponent(input));
       }
-    } catch (error) {
+    } catch (_error) {
       setOutput("转换失败：输入内容无效");
     }
   };
