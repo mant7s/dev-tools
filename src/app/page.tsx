@@ -5,7 +5,8 @@ import { MdArrowOutward } from "react-icons/md";
 import { SiJson } from "react-icons/si";
 import { IoQrCode, IoColorPalette } from "react-icons/io5";
 import { BiTime } from "react-icons/bi";
-import { BsHourglassSplit } from "react-icons/bs";
+import { FaLink } from "react-icons/fa";
+import { VscSymbolNamespace } from "react-icons/vsc";
 import ThemeSwitch from "@/components/ThemeSwitch";
 
 const tools = [
@@ -50,13 +51,33 @@ const tools = [
     disabled: false,
   },
   {
-    title: "敬请期待",
-    description: "更多工具正在开发中...",
-    href: "",
-    icon: <BsHourglassSplit className="w-5 h-5" />,
-    decorativeIcon: <BsHourglassSplit className="w-48 h-48" />,
+    title: "Base64 工具",
+    description: "Base64 编码和解码转换",
+    href: "#/tools/base64",
+    icon: <VscSymbolNamespace className="w-5 h-5" />,
+    decorativeIcon: <VscSymbolNamespace className="w-48 h-48" />,
     gradient: "from-[#7828C8] to-[#4C2889]",
     glowColor: "hover:shadow-[#7828C8]/30",
+    disabled: false,
+  },
+  {
+    title: "URL 工具",
+    description: "URL 编码和解码转换",
+    href: "#/tools/url",
+    icon: <FaLink className="w-5 h-5" />,
+    decorativeIcon: <FaLink className="w-48 h-48" />,
+    gradient: "from-[#17C964] to-[#0D9448]",
+    glowColor: "hover:shadow-[#17C964]/30",
+    disabled: false,
+  },
+  {
+    title: "敬请期待",
+    description: "更多实用工具正在开发中...",
+    href: "#",
+    icon: <MdArrowOutward className="w-5 h-5" />,
+    decorativeIcon: <MdArrowOutward className="w-48 h-48" />,
+    gradient: "from-[#9747FF] to-[#7928CA]",
+    glowColor: "hover:shadow-[#9747FF]/30",
     disabled: true,
   },
 ];
@@ -101,7 +122,7 @@ export default function Home() {
               key={tool.title}
               isPressable={!tool.disabled}
               isHoverable={!tool.disabled}
-              className={`w-full h-full bg-gradient-to-br ${tool.gradient} relative dark:opacity-90 transition-all duration-300 ${!tool.disabled ? `hover:scale-[1.02] shadow-lg ${tool.glowColor}` : 'cursor-not-allowed'} overflow-hidden`}
+              className={`group w-full h-full bg-gradient-to-br ${tool.gradient} relative dark:opacity-90 transition-all duration-300 ${!tool.disabled ? `hover:scale-[1.02] shadow-lg ${tool.glowColor}` : 'cursor-not-allowed'} overflow-hidden`}
               onPress={() => {
                 if (!tool.disabled && tool.href) {
                   window.location.replace(tool.href);
@@ -120,7 +141,7 @@ export default function Home() {
                       {tool.icon}
                     </div>
                   </div>
-                  <div className={`p-2 rounded-full bg-white/20 backdrop-blur-sm ${!tool.disabled && 'transform transition-transform duration-300 group-hover:rotate-45'}`}>
+                  <div className={`p-2 rounded-full bg-white/20 backdrop-blur-sm transition-transform duration-300 ${!tool.disabled && 'transform group-hover:rotate-45'}`}>
                     <MdArrowOutward className="w-4 h-4 text-white" />
                   </div>
                 </div>

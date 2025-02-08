@@ -7,6 +7,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import clsx from 'clsx';
 import './globals.css';
+import GitHubLink from '@/components/GitHubLink';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -37,7 +38,10 @@ export default function RootLayout({
         >
           <Providers>
             <HashRouter>
-              {children}
+              <ThemeProvider>
+                <GitHubLink />
+                {children}
+              </ThemeProvider>
               <Analytics />
               <SpeedInsights />
             </HashRouter>

@@ -12,12 +12,24 @@ A modern collection of development tools built with Next.js and NextUI, designed
 
 ## ✨ Features
 
+### 🔠 Base64 Tools
+- Quick text/file Base64 encoding and decoding
+- Support for multiple character encodings
+- Batch processing capability
+- Real-time preview and validation
+
 ### 🎨 Color Tools
 - Multiple color format conversions (RGB, HSL, CMYK)
 - Professional color picker interface
 - Preset color palettes
 - Automatic color history tracking
 - One-click color code copying
+
+### 🔗 URL Tools
+- URL encoding and decoding
+- Query string parsing and formatting
+- URL component analysis
+- Easy manipulation of URL parameters
 
 ### 📝 JSON Tools
 - Smart JSON formatting and compression

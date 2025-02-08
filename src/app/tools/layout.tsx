@@ -7,6 +7,8 @@ import { IoColorPalette } from 'react-icons/io5';
 import { SiJson } from 'react-icons/si';
 import { IoQrCode } from 'react-icons/io5';
 import { BiTime } from 'react-icons/bi';
+import { VscSymbolNamespace } from 'react-icons/vsc';
+import { FaLink } from 'react-icons/fa';
 import ThemeSwitch from "@/components/ThemeSwitch";
 import Link from 'next/link';
 
@@ -41,6 +43,18 @@ const tabs: ToolTab[] = [
     label: '颜色工具',
     path: '#/tools/color',
     icon: <IoColorPalette className="w-4 h-4" />,
+  },
+  {
+    id: 'base64',
+    label: 'Base64 工具',
+    path: '#/tools/base64',
+    icon: <VscSymbolNamespace className="w-4 h-4" />,
+  },
+  {
+    id: 'url',
+    label: 'URL 工具',
+    path: '#/tools/url',
+    icon: <FaLink className="w-4 h-4" />,
   },
 ];
 

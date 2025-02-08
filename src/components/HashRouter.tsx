@@ -6,7 +6,7 @@ import { Spinner } from '@nextui-org/react';
 import ToolsLayout from '@/app/tools/layout';
 
 // 定义工具路径类型
-type ToolPath = 'tools/json' | 'tools/qrcode' | 'tools/color' | 'tools/timestamp';
+type ToolPath = 'tools/json' | 'tools/qrcode' | 'tools/color' | 'tools/timestamp' | 'tools/base64' | 'tools/url';
 
 // 动态导入工具组件
 const tools: Record<ToolPath, { component: React.ComponentType }> = {
@@ -30,6 +30,18 @@ const tools: Record<ToolPath, { component: React.ComponentType }> = {
   },
   'tools/timestamp': {
     component: dynamic(() => import('@/components/TimestampTool'), {
+      loading: () => <Spinner />,
+      ssr: false,
+    }),
+  },
+  'tools/base64': {
+    component: dynamic(() => import('@/components/Base64Tool'), {
+      loading: () => <Spinner />,
+      ssr: false,
+    }),
+  },
+  'tools/url': {
+    component: dynamic(() => import('@/components/URLTool'), {
       loading: () => <Spinner />,
       ssr: false,
     }),
