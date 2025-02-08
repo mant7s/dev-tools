@@ -15,7 +15,8 @@ export default function Base64Tool() {
       } else {
         setOutput(atob(input));
       }
-    } catch (_error) {
+    } catch (error) {
+      console.error("Base64 转换错误:", error);
       setOutput("转换失败：输入内容无效");
     }
   };

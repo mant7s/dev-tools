@@ -15,7 +15,8 @@ export default function URLTool() {
       } else {
         setOutput(decodeURIComponent(input));
       }
-    } catch (_error) {
+    } catch (error) {
+      console.error("URL 转换错误:", error);
       setOutput("转换失败：输入内容无效");
     }
   };
